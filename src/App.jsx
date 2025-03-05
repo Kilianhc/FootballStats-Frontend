@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/Dashboard/ProfilePage"
@@ -13,6 +13,7 @@ import IsAnon from "./components/IsAnon/IsAnon";
 function App() {
   return (
     <div className="App">
+   
       <Navbar />
 
       <Routes>
@@ -44,6 +45,7 @@ function App() {
           }
         />
       </Routes>
+      
     </div>
   );
 }
