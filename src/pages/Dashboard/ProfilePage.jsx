@@ -19,9 +19,14 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    teamService.searchTeams()
-      .then(response => setTeams(response.data))
-      .catch(error => console.error("Error fetching teams:", error));
+    teamService.searchTeams("") // Pasa un query vacío o el valor que necesites
+      .then(response => {
+        setTeams(response); // response ya es el array de equipos
+      })
+      .catch(error => {
+        console.error("Error fetching teams:", error);
+        setTeams([]); // Asegúrate de que teams sea un array vacío en caso de error
+      });
   }, []);
 
   const handleSendRequest = () => {
