@@ -1,9 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../services/auth.service";
 import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-import axios from "axios";
 import backgroundImage from "../../assets/fondo.jpg";
 
 function SignupPage() {
@@ -11,34 +10,18 @@ function SignupPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState(""); // Estado para el rol
-  const [team, setTeam] = useState(""); // Estado para el equipo
-  const [teams, setTeams] = useState([]); // Lista de equipos desde la API
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const navigate = useNavigate();
-
-  const API_URL = process.env.REACT_APP_SERVER_URL || "https://footballstats-back.onrender.com"
 
   /* const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
   const handleName = (e) => setName(e.target.value); */
 
- // Obtener equipos del backend
- useEffect(() => {
-  axios
-    .get(`${API_URL}/api/teams`)
-    .then((response) => {
-      setTeams(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching teams:", error);
-    });
-}, []);
-
 // Manejar el registro del usuario
 const handleSignupSubmit = (e) => {
   e.preventDefault();
-  const requestBody = { email, password, name, role, team: team || null };
+  const requestBody = { email, password, name, role };
 
   authService
     .signup(requestBody)
@@ -107,19 +90,6 @@ return (
           <Select value={role} onChange={(e) => setRole(e.target.value)}>
             <MenuItem value="Analyst">Analyst</MenuItem>
             <MenuItem value="Coach">Coach</MenuItem>
-          </Select>
-        </FormControl>
-
-        {/* Select para elegir equipo */}
-        <FormControl fullWidth sx={{ mt: 2, background: "white", borderRadius: "5px" }}>
-          <InputLabel>Equipo (Opcional)</InputLabel>
-          <Select value={team} onChange={(e) => setTeam(e.target.value)}>
-            <MenuItem value="">Sin equipo</MenuItem>
-            {teams.map((team) => (
-              <MenuItem key={team._id} value={team._id}>
-                {team.name}
-              </MenuItem>
-            ))}
           </Select>
         </FormControl>
 

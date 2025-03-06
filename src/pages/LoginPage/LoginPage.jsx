@@ -1,102 +1,133 @@
-import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import authService from "../../services/auth.service";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import backgroundImage from "../../assets/fondo.jpg";
+import userService from "../../services/user.service";
+import teamService from "../../services/team.service";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Typography, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
-
-function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(undefined);
-
+function ProfilePage() {
+  const { user, authenticateUser, logOutUser } = useContext(AuthContext);
+  const [userData, setUserData] = useState(user || {});
+  const [teamSearch, setTeamSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
   const navigate = useNavigate();
 
-  const { storeToken, authenticateUser } = useContext(AuthContext);
+  useEffect(() => {
+    userService.getProfile()
+      .then((res) => setUserData(res.data))
+      .catch((err) => console.error("Error fetching profile:", err));
+  }, []);
 
-  /* const handleEmail = (e) => setEmail(e.target.value);
-  const handlePassword = (e) => setPassword(e.target.value); */
+  // Buscar equipo por nombre
+  const handleSearchTeam = () => {
+    if (!teamSearch) return;
+    teamService.searchTeams(teamSearch)
+      .then((res) => setSearchResults(res.data))
+      .catch((err) => console.error("Error searching team:", err));
+  };
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    const requestBody = { email, password };
+  // Enviar solicitud de acceso a un equipo
+  const handleRequestAccess = (teamId) => {
+    teamService.requestAccess(teamId)
+      .then(() => alert("Solicitud enviada al creador del equipo."))
+      .catch((err) => console.error("Error requesting access:", err));
+  };
 
-    // Send a request to the server using axios
-    /* 
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`)
-      .then((response) => {})
-    */
-
-    // Or using a service
-    authService
-      .login(requestBody)
-      .then((response) => {
-        // If the POST request is successful store the authentication token,
-        // after the token is stored authenticate the user
-        // and at last navigate to the home page
-        storeToken(response.data.authToken);
-        authenticateUser();
-        navigate("/");
+  // Actualizar perfil del usuario
+  const handleUpdateProfile = () => {
+    userService.updateProfile(userData)
+      .then(() => {
+        authenticateUser(); // Refrescar contexto
+        setOpenEdit(false);
       })
-      .catch((error) => setErrorMessage(error.response.data.message));
+      .catch((err) => console.error("Error updating profile:", err));
+  };
+
+  // Eliminar cuenta
+  const handleDeleteAccount = () => {
+    if (!window.confirm("¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible.")) return;
+    userService.deleteAccount()
+      .then(() => {
+        logOutUser();
+        navigate("/signup");
+      })
+      .catch((err) => console.error("Error deleting account:", err));
   };
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box
-        sx={{
-          background: "rgba(0, 0, 0, 0.7)",
-          padding: "2rem",
-          borderRadius: "10px",
-          width: "350px",
-          textAlign: "center",
-          color: "white",
-        }}
-      >
-        <Typography variant="h5" fontWeight="bold">
-          Iniciar Sesión
-        </Typography>
-        <form onSubmit={handleLoginSubmit}>
+    <Box sx={{ padding: "2rem", textAlign: "center" }}>
+      <Typography variant="h4">Perfil</Typography>
+      <Typography variant="h6">Nombre: {userData.name}</Typography>
+      <Typography variant="h6">Email: {userData.email}</Typography>
+      <Typography variant="h6">Rol: {userData.role}</Typography>
+      <Typography variant="h6">
+        Equipo: {userData.team ? userData.team.name : "Sin equipo"}
+      </Typography>
+
+      {/* Buscar equipo */}
+      {!userData.team && (
+        <Box sx={{ mt: 3 }}>
+          <TextField
+            label="Buscar equipo"
+            variant="outlined"
+            value={teamSearch}
+            onChange={(e) => setTeamSearch(e.target.value)}
+          />
+          <Button onClick={handleSearchTeam} variant="contained" sx={{ ml: 2 }}>
+            Buscar
+          </Button>
+          <Box sx={{ mt: 2 }}>
+            {searchResults.map((team) => (
+              <Box key={team._id} sx={{ mt: 1 }}>
+                <Typography>{team.name}</Typography>
+                <Button onClick={() => handleRequestAccess(team._id)} variant="outlined">
+                  Solicitar acceso
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+
+      {/* Botón Editar Perfil */}
+      <Button onClick={() => setOpenEdit(true)} variant="contained" sx={{ mt: 3 }}>
+        Editar Perfil
+      </Button>
+
+      {/* Botón Eliminar Cuenta */}
+      <Button onClick={handleDeleteAccount} variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
+        Eliminar Cuenta
+      </Button>
+
+      {/* Modal para editar perfil */}
+      <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
+        <DialogTitle>Editar Perfil</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            label="Nombre"
+            variant="outlined"
+            value={userData.name}
+            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+            sx={{ mt: 2 }}
+          />
           <TextField
             fullWidth
             label="Email"
-            variant="filled"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
+            variant="outlined"
+            value={userData.email}
+            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            sx={{ mt: 2 }}
           />
-          <TextField
-            fullWidth
-            label="Contraseña"
-            type="password"
-            variant="filled"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-          />
-          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3 }} type="submit">
-            Entrar
-          </Button>
-        </form>
-        {errorMessage && <Typography color="error">{errorMessage}</Typography>}
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          ¿No tienes cuenta? <Link to="/signup" style={{ color: "#90caf9" }}>Regístrate</Link>
-        </Typography>
-      </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenEdit(false)}>Cancelar</Button>
+          <Button onClick={handleUpdateProfile} variant="contained">Guardar</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
 
-export default LoginPage;
+export default ProfilePage;
