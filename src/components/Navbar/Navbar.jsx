@@ -61,7 +61,7 @@ function Navbar() {
         <Box sx={{ display: "flex", gap: 2 }}>
           {isLoggedIn ? (
             <>
-              <Button color="inherit" onClick={logOutUser}>
+              <Button color="inherit" onClick={logOutUser} component={Link} to="/">
                 Cerrar Sesión
               </Button>
               <Button color="inherit" component={Link} to="/profile">
