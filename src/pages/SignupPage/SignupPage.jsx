@@ -1,78 +1,141 @@
-import "./SignupPage.css";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../services/auth.service";
+import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import axios from "axios";
+import backgroundImage from "../../assets/fondo.jpg";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState(""); // Estado para el rol
+  const [team, setTeam] = useState(""); // Estado para el equipo
+  const [teams, setTeams] = useState([]); // Lista de equipos desde la API
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const navigate = useNavigate();
 
-  const handleEmail = (e) => setEmail(e.target.value);
+  const API_URL = process.env.REACT_APP_SERVER_URL || "https://footballstats-back.onrender.com"
+
+  /* const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
-  const handleName = (e) => setName(e.target.value);
+  const handleName = (e) => setName(e.target.value); */
 
-  const handleSignupSubmit = (e) => {
-    e.preventDefault();
-    // Create an object representing the request body
-    const requestBody = { email, password, name };
-
-    // Send a request to the server using axios
-    /* 
-    const authToken = localStorage.getItem("authToken");
-    axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/auth/signup`, 
-      requestBody, 
-      { headers: { Authorization: `Bearer ${authToken}` },
+ // Obtener equipos del backend
+ useEffect(() => {
+  axios
+    .get(`${API_URL}/api/teams`)
+    .then((response) => {
+      setTeams(response.data);
     })
-    .then((response) => {})
-    */
+    .catch((error) => {
+      console.error("Error fetching teams:", error);
+    });
+}, []);
 
-    // Or using a service
-    authService
-      .signup(requestBody)
-      .then((response) => {
-        // If the POST request is successful redirect to the login page
-        navigate("/login");
-      })
-      .catch((error) => {
-        // If the request resolves with an error, set the error message in the state
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
-      });
-  };
+// Manejar el registro del usuario
+const handleSignupSubmit = (e) => {
+  e.preventDefault();
+  const requestBody = { email, password, name, role, team: team || null };
 
-  return (
-    <div className="SignupPage">
-      <h1>Sign Up</h1>
+  authService
+    .signup(requestBody)
+    .then(() => navigate("/login"))
+    .catch((error) => {
+      setErrorMessage(error.response?.data?.message || "Error en el registro");
+    });
+};
 
+return (
+  <Box
+    sx={{
+      height: "100vh",
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Box
+      sx={{
+        background: "rgba(0, 0, 0, 0.7)",
+        padding: "2rem",
+        borderRadius: "10px",
+        width: "350px",
+        textAlign: "center",
+        color: "white",
+      }}
+    >
+      <Typography variant="h5" fontWeight="bold">
+        Crear Cuenta
+      </Typography>
       <form onSubmit={handleSignupSubmit}>
-        <label>Email:</label>
-        <input type="email" name="email" value={email} onChange={handleEmail} />
-
-        <label>Password:</label>
-        <input
+        <TextField
+          fullWidth
+          label="Nombre"
+          variant="filled"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          variant="filled"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
+        />
+        <TextField
+          fullWidth
+          label="Contraseña"
           type="password"
-          name="password"
+          variant="filled"
           value={password}
-          onChange={handlePassword}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
         />
 
-        <label>Name:</label>
-        <input type="text" name="name" value={name} onChange={handleName} />
+        {/* Select para elegir rol */}
+        <FormControl fullWidth sx={{ mt: 2, background: "white", borderRadius: "5px" }}>
+          <InputLabel>Rol</InputLabel>
+          <Select value={role} onChange={(e) => setRole(e.target.value)}>
+            <MenuItem value="Analyst">Analyst</MenuItem>
+            <MenuItem value="Coach">Coach</MenuItem>
+          </Select>
+        </FormControl>
 
-        <button type="submit">Sign Up</button>
+        {/* Select para elegir equipo */}
+        <FormControl fullWidth sx={{ mt: 2, background: "white", borderRadius: "5px" }}>
+          <InputLabel>Equipo (Opcional)</InputLabel>
+          <Select value={team} onChange={(e) => setTeam(e.target.value)}>
+            <MenuItem value="">Sin equipo</MenuItem>
+            {teams.map((team) => (
+              <MenuItem key={team._id} value={team._id}>
+                {team.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button variant="contained" color="primary" fullWidth sx={{ mt: 3 }} type="submit">
+          Registrarse
+        </Button>
       </form>
 
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && <Typography color="error" sx={{ mt: 2 }}>{errorMessage}</Typography>}
 
-      <p>Already have account?</p>
-      <Link to={"/login"}> Login</Link>
-    </div>
-  );
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        ¿Ya tienes una cuenta? <Link to="/login" style={{ color: "#90caf9" }}>Inicia sesión</Link>
+      </Typography>
+    </Box>
+  </Box>
+);
 }
 
 export default SignupPage;

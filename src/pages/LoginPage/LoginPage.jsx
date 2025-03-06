@@ -1,8 +1,10 @@
-import "./LoginPage.css";
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import authService from "../../services/auth.service";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import backgroundImage from "../../assets/fondo.jpg";
+
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,8 +15,8 @@ function LoginPage() {
 
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
-  const handleEmail = (e) => setEmail(e.target.value);
-  const handlePassword = (e) => setPassword(e.target.value);
+  /* const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value); */
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -37,36 +39,63 @@ function LoginPage() {
         authenticateUser();
         navigate("/");
       })
-      .catch((error) => {
-        // If the request resolves with an error, set the error message in the state
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
-      });
+      .catch((error) => setErrorMessage(error.response.data.message));
   };
 
   return (
-    <div className="LoginPage">
-      <h1>Login</h1>
-
-      <form onSubmit={handleLoginSubmit}>
-        <label>Email:</label>
-        <input type="email" name="email" value={email} onChange={handleEmail} />
-
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={handlePassword}
-        />
-
-        <button type="submit">Login</button>
-      </form>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      <p>Don't have an account yet?</p>
-      <Link to={"/signup"}> Sign Up</Link>
-    </div>
+    <Box
+      sx={{
+        height: "100vh",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          background: "rgba(0, 0, 0, 0.7)",
+          padding: "2rem",
+          borderRadius: "10px",
+          width: "350px",
+          textAlign: "center",
+          color: "white",
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold">
+          Iniciar Sesión
+        </Typography>
+        <form onSubmit={handleLoginSubmit}>
+          <TextField
+            fullWidth
+            label="Email"
+            variant="filled"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
+          />
+          <TextField
+            fullWidth
+            label="Contraseña"
+            type="password"
+            variant="filled"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
+          />
+          <Button variant="contained" color="primary" fullWidth sx={{ mt: 3 }} type="submit">
+            Entrar
+          </Button>
+        </form>
+        {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          ¿No tienes cuenta? <Link to="/signup" style={{ color: "#90caf9" }}>Regístrate</Link>
+        </Typography>
+      </Box>
+    </Box>
   );
 }
 
