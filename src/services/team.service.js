@@ -78,6 +78,13 @@ const teamService = {
       headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
     });
   },
+
+  //Obtener los datos de un equipo por su ID
+  getTeamById: (teamId) => {
+    return axios.get(`${API_URL}/api/teams/${teamId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+    });
+  },
 };
 
 export default teamService;

@@ -3,15 +3,18 @@ import { useNavigate } from "react-router-dom";
 import userService from "../../services/user.service";
 import teamService from "../../services/team.service";
 import { Box, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, List, ListItem, ListItemText, TextField } from "@mui/material";
-import CreateTeamButton from "./CreateTeamButton";
-import EditProfileButton from "./EditProfileButton";
-import DeleteAccountButton from "./DeleteAccountButton";
-import TeamSearchAndRequest from "./TeamSearchAndRequest";
-import ViewRequestsButton from "./ViewRequestsButton";
+import CreateTeamButton from "./DashboardComponents/CreateTeamButton";
+import EditProfileButton from "./DashboardComponents/EditProfileButton";
+import DeleteAccountButton from "./DashboardComponents/DeleteAccountButton";
+import TeamSearchAndRequest from "./DashboardComponents/TeamSearchAndRequest";
+import ViewRequestsButton from "./DashboardComponents/ViewRequestsButton";
+import { useTeam } from "../../context/team.context";
+import { useUser } from "../../context/user.context";
 
 function ProfilePage() {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useUser(); // Usa el contexto del usuario
   const [teams, setTeams] = useState([]);
+  const { team, setTeam } = useTeam(); // Usa el contexto del equipo
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -22,15 +25,21 @@ function ProfilePage() {
 
   useEffect(() => {
     userService.getProfile()
-      .then(response => setUser(response.data))
+      .then(response => {
+        console.log("Perfil del usuario recibido:", response.data); // 👀 Verifica los datos
+        setUser(response.data); // Actualiza el estado global del usuario
+        if (response.data.team) {
+          setTeam(response.data.team); // Actualiza el estado global del equipo
+        }
+      })
       .catch(error => console.error("Error fetching user profile:", error));
-  }, []);
+  }, [setUser, setTeam]); // Añade setUser y setTeam como dependencias
 
   useEffect(() => {
     teamService.searchTeams("")
       .then(response => {
         console.log("Equipos recibidos:", response);
-        setTeams(response.slice(0, 5));
+        setTeams(response);
       })
       .catch(error => {
         console.error("Error fetching teams:", error);
@@ -78,11 +87,12 @@ function ProfilePage() {
     }
   };
 
-  const handleCreateTeam = () => {
-    teamService.createTeam({ name: "Nuevo Equipo" })
+  const handleCreateTeam = (teamName) => {
+    teamService.createTeam({ name: teamName })
       .then(response => {
         alert("Equipo creado correctamente");
         setUser({ ...user, team: response.data });
+        setTeam(response.data); // Actualiza el estado global del equipo
       })
       .catch(error => {
         console.error("Error creating team:", error);
@@ -146,15 +156,14 @@ function ProfilePage() {
 
   return (
     <Box sx={{ p: 4, textAlign: "center" }}>
-      <Typography variant="h4">Perfil</Typography>
       {user && (
         <Box>
-          <Typography>Nombre: {user.name}</Typography>
-          <Typography>Email: {user.email}</Typography>
-          <Typography>Rol: {user.role}</Typography>
-          <Typography>Equipo: {user.team ? user.team.name : "Sin equipo"}</Typography>
+          <Typography variant="h4">{user.name}</Typography>
+          <Typography>{user.email}</Typography>
+          <Typography>{user.role}</Typography>
+          <Typography>{team ? team.name : "Sin equipo"}</Typography>
 
-          {user.role === "Analyst" && !user.team && (
+          {user.role === "Analyst" && !team && (
             <CreateTeamButton onCreateTeam={handleCreateTeam} />
           )}
 
