@@ -11,15 +11,15 @@ class UserService {
   }
 
   // Actualizar perfil del usuario
-  updateProfile(userData) {
-    return axios.put(`${API_URL}/api/users/profile`, userData, {
+  updateProfile(userData, userId) {
+    return axios.put(`${API_URL}/api/users/${userId}`, userData, {
       headers: this.authHeader(),
     });
   }
 
   // Eliminar cuenta del usuario
-  deleteAccount() {
-    return axios.delete(`${API_URL}/api/users/profile`, {
+  deleteAccount(userId) {
+    return axios.delete(`${API_URL}/api/users/${userId}`, {
       headers: this.authHeader(),
     });
   }

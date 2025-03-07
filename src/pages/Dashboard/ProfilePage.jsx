@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../../services/user.service";
 import teamService from "../../services/team.service";
-import { Box, Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Autocomplete } from "@mui/material";
+import { Box, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, List, ListItem, ListItemText, TextField } from "@mui/material";
+import CreateTeamButton from "./CreateTeamButton";
+import EditProfileButton from "./EditProfileButton";
+import DeleteAccountButton from "./DeleteAccountButton";
+import TeamSearchAndRequest from "./TeamSearchAndRequest";
+import ViewRequestsButton from "./ViewRequestsButton";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -10,6 +15,9 @@ function ProfilePage() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openRequests, setOpenRequests] = useState(false);
+  const [requests, setRequests] = useState([]);
+  const [editData, setEditData] = useState({ name: "", email: "", password: "", role: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,37 +27,121 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    teamService.searchTeams("") // Pasa un query vacío o el valor que necesites
+    teamService.searchTeams("")
       .then(response => {
-        setTeams(response); // response ya es el array de equipos
+        console.log("Equipos recibidos:", response);
+        setTeams(response.slice(0, 5));
       })
       .catch(error => {
         console.error("Error fetching teams:", error);
-        setTeams([]); // Asegúrate de que teams sea un array vacío en caso de error
+        setTeams([]);
       });
   }, []);
 
-  const handleSendRequest = () => {
-    if (selectedTeam) {
-      teamService.sendJoinRequest(selectedTeam.id)
-        .then(() => alert("Solicitud enviada"))
-        .catch(error => console.error("Error sending request:", error));
+  const handleOpenEdit = () => {
+    if (user) {
+      setEditData({
+        name: user.name,
+        email: user.email,
+        password: "",
+        role: user.role,
+      });
+    }
+    setOpenEdit(true);
+  };
+
+  const handleEditProfile = () => {
+    if (user && user._id) {
+      const updatedData = { ...editData };
+
+      if (!updatedData.name) delete updatedData.name;
+      if (!updatedData.email) delete updatedData.email;
+      if (!updatedData.password) delete updatedData.password;
+      if (!updatedData.role) delete updatedData.role;
+
+      if (updatedData.email === "") {
+        alert("El email no puede estar vacío.");
+        return;
+      }
+
+      userService.updateProfile(updatedData, user._id)
+        .then(response => {
+          const updatedUser = { ...user, ...response.data };
+          setUser(updatedUser);
+          setOpenEdit(false);
+          alert("Perfil actualizado correctamente");
+        })
+        .catch(error => {
+          console.error("Error updating profile:", error);
+          alert("Error al actualizar el perfil. Inténtalo de nuevo.");
+        });
     }
   };
 
-  const handleEditProfile = (updatedData) => {
-    userService.updateProfile(updatedData)
+  const handleCreateTeam = () => {
+    teamService.createTeam({ name: "Nuevo Equipo" })
       .then(response => {
-        setUser(response.data);
-        setOpenEdit(false);
+        alert("Equipo creado correctamente");
+        setUser({ ...user, team: response.data });
       })
-      .catch(error => console.error("Error updating profile:", error));
+      .catch(error => {
+        console.error("Error creating team:", error);
+        alert("Error al crear el equipo.");
+      });
+  };
+
+  const handleViewRequests = () => {
+    teamService.getTeamRequests(user.team._id)
+      .then(response => {
+        setRequests(response.data);
+        setOpenRequests(true);
+      })
+      .catch(error => {
+        console.error("Error fetching requests:", error);
+        alert("Error al obtener las solicitudes.");
+      });
+  };
+
+  const handleSendRequest = () => {
+    if (selectedTeam) {
+      teamService.requestJoinTeam(selectedTeam._id)
+        .then(() => {
+          alert("Solicitud enviada correctamente");
+        })
+        .catch(error => {
+          console.error("Error sending request:", error);
+          alert("Error al enviar la solicitud.");
+        });
+    }
+  };
+
+  const handleRespondToRequest = (requestId, accept) => {
+    teamService.respondToRequest(requestId, accept)
+      .then(() => {
+        alert(accept ? "Solicitud aceptada" : "Solicitud denegada");
+        handleViewRequests(); // Actualizar la lista de solicitudes
+      })
+      .catch(error => {
+        console.error("Error responding to request:", error);
+        alert("Error al responder a la solicitud.");
+      });
   };
 
   const handleDeleteAccount = () => {
-    userService.deleteAccount()
-      .then(() => navigate("/signup"))
-      .catch(error => console.error("Error deleting account:", error));
+    if (user && user._id) {
+      userService.deleteAccount(user._id)
+        .then(() => {
+          alert("Cuenta eliminada correctamente");
+          navigate("/signup");
+        })
+        .catch(error => {
+          console.error("Error deleting account:", error);
+          alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
+        });
+    } else {
+      console.error("No se pudo obtener el ID del usuario.");
+      alert("Error: No se pudo obtener el ID del usuario.");
+    }
   };
 
   return (
@@ -61,27 +153,26 @@ function ProfilePage() {
           <Typography>Email: {user.email}</Typography>
           <Typography>Rol: {user.role}</Typography>
           <Typography>Equipo: {user.team ? user.team.name : "Sin equipo"}</Typography>
-          
-          {!user.team && (
-            <Box mt={2}>
-              <Autocomplete
-                options={teams}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, value) => setSelectedTeam(value)}
-                renderInput={(params) => <TextField {...params} label="Buscar equipo" variant="outlined" />}
-              />
-              <Button variant="contained" color="primary" onClick={handleSendRequest} sx={{ mt: 2 }}>
-                Enviar solicitud
-              </Button>
-            </Box>
+
+          {user.role === "Analyst" && !user.team && (
+            <CreateTeamButton onCreateTeam={handleCreateTeam} />
           )}
-          
-          <Button variant="contained" color="secondary" onClick={() => setOpenEdit(true)} sx={{ mt: 2 }}>
-            Editar Perfil
-          </Button>
-          <Button variant="contained" color="error" onClick={() => setOpenDelete(true)} sx={{ mt: 2, ml: 2 }}>
-            Eliminar Cuenta
-          </Button>
+
+          {user.role === "Analyst" && user.team && (
+            <ViewRequestsButton onViewRequests={handleViewRequests} />
+          )}
+
+          {user.role === "Coach" && !user.team && (
+            <TeamSearchAndRequest
+              teams={teams}
+              selectedTeam={selectedTeam}
+              onSelectTeam={setSelectedTeam}
+              onSendRequest={handleSendRequest}
+            />
+          )}
+
+          <EditProfileButton onOpenEdit={handleOpenEdit} />
+          <DeleteAccountButton onOpenDelete={() => setOpenDelete(true)} />
         </Box>
       )}
 
@@ -89,18 +180,68 @@ function ProfilePage() {
       <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
         <DialogTitle>Editar Perfil</DialogTitle>
         <DialogContent>
-          <TextField fullWidth label="Nombre" defaultValue={user?.name} sx={{ my: 2 }} />
-          <TextField fullWidth label="Email" defaultValue={user?.email} sx={{ my: 2 }} />
-          <TextField fullWidth label="Contraseña" type="password" placeholder="Nueva contraseña" sx={{ my: 2 }} />
+          <TextField
+            fullWidth
+            label="Nombre"
+            value={editData.name}
+            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+            sx={{ my: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            value={editData.email}
+            onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+            sx={{ my: 2 }}
+          />
+          <TextField
+            fullWidth
+            label="Contraseña"
+            type="password"
+            placeholder="Nueva contraseña"
+            value={editData.password}
+            onChange={(e) => setEditData({ ...editData, password: e.target.value })}
+            sx={{ my: 2 }}
+          />
+          <Select
+            fullWidth
+            value={editData.role}
+            onChange={(e) => setEditData({ ...editData, role: e.target.value })}
+            sx={{ my: 2 }}
+          >
+            <MenuItem value="Analyst">Analyst</MenuItem>
+            <MenuItem value="Coach">Coach</MenuItem>
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenEdit(false)}>Cancelar</Button>
-          <Button onClick={() => handleEditProfile({ name: "Nuevo Nombre", email: "nuevo@email.com" })}>
-            Guardar
-          </Button>
+          <Button onClick={handleEditProfile}>Guardar</Button>
         </DialogActions>
       </Dialog>
-      
+
+      {/* Modal para ver solicitudes */}
+      <Dialog open={openRequests} onClose={() => setOpenRequests(false)}>
+        <DialogTitle>Solicitudes</DialogTitle>
+        <DialogContent>
+          {requests.length > 0 ? (
+            <List>
+              {requests.map((request) => (
+                <ListItem key={request._id}>
+                  <ListItemText primary={`Solicitud de ${request.coach.name}`} />
+                  <Button onClick={() => handleRespondToRequest(request._id, true)}>Aceptar</Button>
+                  <Button onClick={() => handleRespondToRequest(request._id, false)}>Denegar</Button>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography>En este momento no tienes solicitudes.</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenRequests(false)}>Cerrar</Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Confirmación para eliminar cuenta */}
       <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
         <DialogTitle>¿Seguro que quieres eliminar tu cuenta?</DialogTitle>

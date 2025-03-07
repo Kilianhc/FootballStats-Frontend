@@ -3,6 +3,7 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_SERVER_URL || "https://footballstats-back.onrender.com";
 
 const teamService = {
+  // Buscar equipos por nombre
   searchTeams: async (query) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -14,7 +15,7 @@ const teamService = {
       }
 
       // Realiza la solicitud a la API
-      const response = await axios.get(`${API_URL}/api/teams`, {
+      const response = await axios.get(`${API_URL}/api/teams/search`, {
         params: { name: query }, // Parámetros de búsqueda
         headers: { Authorization: `Bearer ${token}` }, // Encabezado de autenticación
       });
@@ -50,14 +51,30 @@ const teamService = {
     }
   },
 
+  // Solicitar unirse a un equipo (para Coaches)
   requestJoinTeam: (teamId) => {
     return axios.post(`${API_URL}/api/teams/${teamId}/request`, {}, {
       headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
     });
   },
 
-  leaveTeam: () => {
-    return axios.post(`${API_URL}/api/teams/leave`, {}, {
+  // Crear un equipo (para Analysts)
+  createTeam: (teamData) => {
+    return axios.post(`${API_URL}/api/teams`, teamData, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+    });
+  },
+
+  // Obtener solicitudes de unión a un equipo (para Analysts)
+  getTeamRequests: (teamId) => {
+    return axios.get(`${API_URL}/api/teams/${teamId}/requests`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+    });
+  },
+
+  // Responder a una solicitud de unión (para Analysts)
+  respondToRequest: (requestId, accept) => {
+    return axios.post(`${API_URL}/api/teams/${requestId}/respond-request`, { accept }, {
       headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
     });
   },
