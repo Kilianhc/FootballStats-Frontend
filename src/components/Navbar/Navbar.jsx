@@ -28,7 +28,7 @@ function Navbar() {
 
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar sx={{bgcolor: "#52eef0", color: "#2d8384"}}>
         {isLoggedIn && (
           <IconButton
             edge="start"

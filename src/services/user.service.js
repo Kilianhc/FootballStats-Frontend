@@ -18,7 +18,7 @@ class UserService {
   }
 
   // Eliminar cuenta del usuario
-  deleteAccount(userId) {
+  deleteUserAccount(userId) {
     return axios.delete(`${API_URL}/api/users/${userId}`, {
       headers: this.authHeader(),
     });
