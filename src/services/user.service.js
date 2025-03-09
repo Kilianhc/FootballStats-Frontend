@@ -11,8 +11,8 @@ class UserService {
   }
 
   // Actualizar perfil del usuario
-  updateProfile(userData, userId) {
-    return axios.put(`${API_URL}/api/users/${userId}`, userData, {
+  updateProfile(userId, updatedData) {
+    return axios.put(`${API_URL}/api/users/${userId}`, updatedData, {
       headers: this.authHeader(),
     });
   }

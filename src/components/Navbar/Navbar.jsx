@@ -17,6 +17,8 @@ function Navbar() {
     setAnchorEl(null);
   };
 
+  console.log("Usuario en Navbar:", user); // Depuración
+
   const handleViewTeam = () => {
     if (user?.team) {
       navigate(`/team/${user.team}`);

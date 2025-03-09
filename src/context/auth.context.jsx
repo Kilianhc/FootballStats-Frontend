@@ -63,6 +63,11 @@ function AuthProviderWrapper(props) {
     authenticateUser();
   };
 
+  // Función para actualizar el estado del usuario
+  const updateUser = (userData) => {
+    setUser(userData);
+  };
+
   useEffect(() => {
     // Run this code once the AuthProviderWrapper component in the App loads for the first time.
     // This effect runs when the application and the AuthProviderWrapper component load for the first time.
@@ -78,6 +83,7 @@ function AuthProviderWrapper(props) {
         storeToken,
         authenticateUser,
         logOutUser,
+        updateUser
       }}
     >
       {props.children}

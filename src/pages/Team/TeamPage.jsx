@@ -105,7 +105,7 @@ const TeamPage = () => {
           
        {/* Lista de jugadores del equipo */}
        <Box sx={{ mt: 4 }}> 
-        <Typography variant="h4" mb={5} gutterBottom>Jugadores del Equipo</Typography>
+        <Typography variant="h4" mb={5} gutterBottom>Jugadores del Equipo:</Typography>
         {players.length > 0 ? (
           players.map((player) => (
             <Box key={player._id} display="flex" justifyContent="space-around" sx={{ mb: 2, p: 2, borderTop: 1 }}>
