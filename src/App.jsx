@@ -16,8 +16,8 @@ import { UserProvider } from "./context/user.context"
 function App() {
   return (
     <div className="App">
-    {/*   <UserProvider>
-      <TeamProvider> */}
+      <UserProvider>
+      <TeamProvider>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -56,8 +56,8 @@ function App() {
           }
         />
       </Routes>
-     {/*  </TeamProvider>
-      </UserProvider> */}
+      </TeamProvider>
+      </UserProvider>
       
     </div>
   );
