@@ -22,6 +22,7 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
     email: "",
     role: "",
     password: "",
+    team: null
   });
 
   // Estado para manejar la opción del equipo
@@ -35,6 +36,7 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
         email: userData.email || "",
         role: userData.role || "",
         password: "",
+        team: userData.team || null,
       });
       // Si el usuario tiene equipo, selecciona "Mantenerlo", de lo contrario, "Quitarlo"
       setTeamOption(userData.team ? "Mantenerlo" : "Quitarlo");
@@ -48,16 +50,24 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
     });
   };
 
+  const handleTeamChange = (event) => {
+    setTeamOption(event.target.value);
+  };
+
   const handleSave = () => {
     const updatedData = { ...formData };
+
     if (!updatedData.password) {
-      delete updatedData.password;
+        delete updatedData.password;
     }
-    // Si el usuario elige "Quitarlo", enviamos `team: null`
-    updatedData.team = teamOption === "Quitarlo" ? null : userData.team._id;
+    // Si el usuario elige "Quitarlo", enviamos team: null
+    // Si no, verificamos que el team sea un ObjectId válido
+    updatedData.team = teamOption === "Quitarlo" ? null : (userData.team ? userData.team._id : null);
 
     onSave(updatedData);
-  };
+};
+
+
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>

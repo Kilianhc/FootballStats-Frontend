@@ -30,6 +30,17 @@ function Navbar() {
     handleMenuClose();
   };
 
+  const handleViewStats = () => {
+    if (user?.team) {
+      // Redirige al equipo con sus estadísticas
+      navigate(`/stats/${user.team}`);
+    } else {
+      alert("No perteneces a ningún equipo.");
+    }
+    handleMenuClose();
+  };
+  
+
   return (
     <AppBar position="static">
       <Toolbar sx={{bgcolor: "#52eef0", color: "#135d5e"}}>
@@ -51,7 +62,7 @@ function Navbar() {
           <MenuItem onClick={handleViewTeam}>
             Equipo
           </MenuItem>
-          <MenuItem onClick={handleMenuClose} component={Link} to="/stats">
+          <MenuItem onClick={handleViewStats}>
             Estadísticas
           </MenuItem>
         </Menu>

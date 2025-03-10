@@ -31,7 +31,7 @@ const TeamPage = () => {
         setTeam(response.data); // Asigna el equipo
 
         // Ya no es necesario manejar los jugadores desde localStorage
-        setPlayers(response.data.players); // Asigna los jugadores del equipo
+        /* setPlayers(response.data.players); */ // Asigna los jugadores del equipo
       } catch (error) {
         console.error("Error fetching team:", error);
       }

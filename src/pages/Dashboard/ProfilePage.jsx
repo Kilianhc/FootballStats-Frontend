@@ -54,16 +54,27 @@ const ProfilePage = () => {
 
   const handleUpdateProfile = async (updatedData) => {
     try {
-      const response = await userService.updateProfile(user._id, updatedData);
-      //ACTUALIZAR USUARIO GLOBAL DESPUÉS DE EDITAR
-      setUser((prevUser) => ({ ...prevUser, ...updatedData }));
-      // Actualizar usuario en AuthContext también
-      updateUser((prevUser) => ({ ...prevUser, ...updatedData }));
-      setOpenEditDialog(false);
+        // Asegurar que solo se cambia el equipo si se ha proporcionado un valor diferente
+        const finalData = { 
+            ...updatedData, 
+            team: updatedData.team !== undefined ? updatedData.team : user.team
+        };
+
+        console.log('Datos enviados al backend:', finalData); // Aquí verificamos los datos
+        const response = await userService.updateProfile(user._id, finalData);
+
+        // Actualizar el estado global del usuario
+        setUser((prevUser) => ({ ...prevUser, ...finalData }));
+        updateUser((prevUser) => ({ ...prevUser, ...finalData }));
+
+        setOpenEditDialog(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
+        console.error("Error updating profile:", error);
     }
-  };
+};
+
+
+
 
   // Manejar la creación de un equipo
   const handleCreateTeam = async (teamName) => {

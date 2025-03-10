@@ -12,23 +12,17 @@ export const TeamProvider = ({ children }) => {
     if (team) {
       const fetchPlayers = async () => {
         try {
-          // Si ya tienes los jugadores en el localStorage, los cargamos desde allí
-          const storedPlayers = JSON.parse(localStorage.getItem(`players_${team._id}`));
-
-          if (storedPlayers) {
-            setPlayers(storedPlayers);
-          } else {
-            // Si no hay jugadores en localStorage, los traemos de la API
-            const playersData = await playerService.getPlayers();
-            setPlayers(playersData);
-            localStorage.setItem(`players_${team._id}`, JSON.stringify(playersData)); // Guardamos en localStorage
-          }
+          // Solicitamos los jugadores directamente desde la API basándonos en el `team._id`
+          const playersData = await playerService.getPlayers(team._id);
+          setPlayers(playersData); // Asignamos los jugadores obtenidos de la API
         } catch (error) {
           console.error("Error al obtener los jugadores:", error);
         }
       };
 
       fetchPlayers();
+    } else {
+      setPlayers([]); // Si no hay equipo, limpiamos la lista de jugadores
     }
   }, [team]); // Solo ejecutar cuando el equipo cambia
 
