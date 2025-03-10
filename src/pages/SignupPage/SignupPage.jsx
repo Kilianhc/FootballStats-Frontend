@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../services/auth.service";
 import { Box, Button, TextField, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-import backgroundImage from "../../assets/fondo.jpg";
+import backgroundImage from "../../assets/bj2.jpeg";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
@@ -93,7 +92,8 @@ return (
           </Select>
         </FormControl>
 
-        <Button variant="contained" color="primary" fullWidth sx={{ mt: 3 }} type="submit">
+        <Button variant="contained" fullWidth sx={{ mt: 3, bgcolor: "#2d8384", transition: "transform 0.2s, background-color 0.2s", "&:hover": {
+      transform: "scale(1.05)", bgcolor: "#3bb9bb"} }} type="submit">
           Registrarse
         </Button>
       </form>
@@ -101,7 +101,7 @@ return (
       {errorMessage && <Typography color="error" sx={{ mt: 2 }}>{errorMessage}</Typography>}
 
       <Typography variant="body2" sx={{ mt: 2 }}>
-        ¿Ya tienes una cuenta? <Link to="/login" style={{ color: "#90caf9" }}>Inicia sesión</Link>
+        ¿Ya tienes una cuenta? <Link to="/login" style={{ color: "#52eef0" }}>Inicia sesión</Link>
       </Typography>
     </Box>
   </Box>

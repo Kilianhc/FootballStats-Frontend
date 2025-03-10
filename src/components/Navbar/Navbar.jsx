@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/auth.context";
+import { useUser } from "../../context/user.context";
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Button, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 function Navbar() {
-  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn, logOutUser } = useContext(AuthContext);
+  const { user } = useUser();
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
@@ -30,7 +32,7 @@ function Navbar() {
 
   return (
     <AppBar position="static">
-      <Toolbar sx={{bgcolor: "#52eef0", color: "#2d8384"}}>
+      <Toolbar sx={{bgcolor: "#52eef0", color: "#135d5e"}}>
         {isLoggedIn && (
           <IconButton
             edge="start"
@@ -54,26 +56,26 @@ function Navbar() {
           </MenuItem>
         </Menu>
 
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center", fontWeight:"900", fontSize:"xx-large" }}>
           FootballStats
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2 }}>
           {isLoggedIn ? (
             <>
-              <Button color="inherit" onClick={logOutUser} component={Link} to="/">
+              <Button color="inherit" onClick={logOutUser} component={Link} to="/" sx={{fontWeight:"900"}}>
                 Cerrar Sesión
               </Button>
-              <Button color="inherit" component={Link} to="/profile">
+              <Button color="inherit" component={Link} to="/profile" sx={{fontWeight:"900"}}>
                 Mi Perfil
               </Button>
             </>
           ) : (
             <>
-              <Button color="inherit" component={Link} to="/signup">
+              <Button color="inherit" component={Link} to="/signup" sx={{fontWeight:"900"}}>
                 Crear Usuario
               </Button>
-              <Button color="inherit" component={Link} to="/login">
+              <Button color="inherit" component={Link} to="/login" sx={{fontWeight:"900"}}>
                 Iniciar Sesión
               </Button>
             </>

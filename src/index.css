@@ -1,10 +1,10 @@
 body {
   margin: 0;
   background-image: url(./assets/bg.jpeg), url(./assets/bj2.jpeg); /* Dos imágenes de fondo */
-  background-size: 120% 170%; /* Ajusta el tamaño de las imágenes para cubrir toda la pantalla */
+  background-size: 120% 215%; /* Ajusta el tamaño de las imágenes para cubrir toda la pantalla */
   background-repeat: no-repeat; /* No repetir las imágenes */
   background-position: 0 0, 100% 0; /* Posición inicial de ambas imágenes */
-  animation: moveBackground 50s linear infinite; /* Animación más lenta */
+  animation: moveBackground 90s linear infinite; /* Animación más lenta */
 }
 
 @keyframes moveBackground {

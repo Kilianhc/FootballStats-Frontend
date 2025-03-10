@@ -13,6 +13,7 @@ const playerService = {
         return null;
       }
 
+      console.log("Datos enviados al backend:", JSON.stringify(playerData, null, 2)); // Verificar la estructura antes de enviarla
       const response = await axios.post(`${API_URL}/api/players`, playerData, {
         headers: { Authorization: `Bearer ${token}` },
       });

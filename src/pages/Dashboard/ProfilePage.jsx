@@ -7,11 +7,12 @@ import EditProfileButton from "./DashboardComponents/EditProfileButton";
 import DeleteAccountButton from "./DashboardComponents/DeleteAccountButton";
 import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { AuthContext } from "../../context/auth.context";
+import { useUser } from "../../context/user.context"
 import CreateTeamButton from "../Dashboard/DashboardComponents/CreateTeamButton"
 import EditProfileDialog from "../Dashboard/DashboardComponents/EditProfileDialog"
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useUser();
   const [teamName, setTeamName] = useState("Cargando..."); // Estado para el nombre del equipo
   const [openDialog, setOpenDialog] = useState(false); // Estado para el diálogo de confirmación
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -54,7 +55,10 @@ const ProfilePage = () => {
   const handleUpdateProfile = async (updatedData) => {
     try {
       const response = await userService.updateProfile(user._id, updatedData);
-      setUser(response.data);
+      //ACTUALIZAR USUARIO GLOBAL DESPUÉS DE EDITAR
+      setUser((prevUser) => ({ ...prevUser, ...updatedData }));
+      // Actualizar usuario en AuthContext también
+      updateUser((prevUser) => ({ ...prevUser, ...updatedData }));
       setOpenEditDialog(false);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -86,8 +90,8 @@ const ProfilePage = () => {
   return (
     <Container maxWidth="md">
       <Box mt={10}>
-        <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)" }}>
-          <CardContent sx={{fontWeight: "bold"}}>
+        <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)" , backdropFilter: "blur(8px)"}}>
+          <CardContent sx={{ fontWeight: "bold" }}>
             {user ? (
               <>
                 <Typography variant="h4" gutterBottom mb={5}>Nombre: {user.name}</Typography>
@@ -101,7 +105,7 @@ const ProfilePage = () => {
                 )}
 
                 {/* Botones de editar y eliminar */}
-                <Box mt={3} display="flex" sx={{justifyContent: "center"}}>
+                <Box mt={3} display="flex" sx={{ justifyContent: "center" }}>
                   <EditProfileButton onOpenEdit={() => setOpenEditDialog(true)} />
                   <DeleteAccountButton onOpenDelete={() => setOpenDialog(true)} />
                 </Box>

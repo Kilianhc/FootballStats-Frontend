@@ -10,6 +10,10 @@ import {
   Select,
   InputLabel,
   FormControl,
+  RadioGroup,
+  FormLabel,
+  FormControlLabel,
+  Radio
 } from "@mui/material";
 
 function EditProfileDialog({ open, onClose, userData, onSave }) {
@@ -20,6 +24,9 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
     password: "",
   });
 
+  // Estado para manejar la opción del equipo
+  const [teamOption, setTeamOption] = useState("Mantenerlo");
+
   // Se ejecuta cuando userData cambia, asegurando que el estado se inicialice correctamente
   useEffect(() => {
     if (userData) {
@@ -29,6 +36,8 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
         role: userData.role || "",
         password: "",
       });
+      // Si el usuario tiene equipo, selecciona "Mantenerlo", de lo contrario, "Quitarlo"
+      setTeamOption(userData.team ? "Mantenerlo" : "Quitarlo");
     }
   }, [userData]);
 
@@ -44,6 +53,9 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
     if (!updatedData.password) {
       delete updatedData.password;
     }
+    // Si el usuario elige "Quitarlo", enviamos `team: null`
+    updatedData.team = teamOption === "Quitarlo" ? null : userData.team._id;
+
     onSave(updatedData);
   };
 
@@ -67,7 +79,7 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
           value={formData.email}
           onChange={handleChange}
         />
-        
+
         {/* Select para el rol */}
         <FormControl fullWidth margin="dense">
           <InputLabel>Rol</InputLabel>
@@ -91,6 +103,18 @@ function EditProfileDialog({ open, onClose, userData, onSave }) {
           onChange={handleChange}
           helperText="Déjalo en blanco si no quieres cambiar la contraseña"
         />
+        {/* Opción para mantener o eliminar el equipo */}
+        <FormControl component="fieldset" sx={{ mt: 2 }}>
+          <FormLabel component="legend">Equipo</FormLabel>
+          <RadioGroup
+            row
+            value={teamOption}
+            onChange={(e) => setTeamOption(e.target.value)}
+          >
+            <FormControlLabel value="Mantenerlo" control={<Radio />} label="Mantener equipo" />
+            <FormControlLabel value="Quitarlo" control={<Radio />} label="Quitar equipo" />
+          </RadioGroup>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
