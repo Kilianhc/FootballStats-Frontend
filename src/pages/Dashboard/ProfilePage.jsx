@@ -100,7 +100,7 @@ const ProfilePage = () => {
 
   return (
     <Container maxWidth="md">
-      <Box mt={10}>
+      <Box mt={7}>
         <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)" , backdropFilter: "blur(8px)"}}>
           <CardContent sx={{ fontWeight: "bold" }}>
             {user ? (

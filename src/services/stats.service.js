@@ -51,29 +51,30 @@ const statsService = {
   },
 
   // Actualizar estadísticas del jugador específico (solo Analysts pueden hacerlo)
-  updateStat: async (statId, updatedStat) => {
+  updateStat: async (playerId, newStats) => {
     try {
       const token = localStorage.getItem("authToken");
-
+  
       if (!token) {
         console.log("No se encontró el token de autenticación. Inicia sesión para modificar las estadísticas.");
         return null;
       }
-
+  
       const response = await axios.put(
-        `${API_URL}/api/stats/${statId}`,
-        updatedStat,
+        `${API_URL}/api/stats/player/${playerId}`,
+        newStats,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
+  
       return response.data;
     } catch (error) {
       console.error("Error al actualizar las estadísticas:", error);
       return null;
     }
   },
+  
 
   // Eliminar estadísticas del jugador específico (solo Analysts pueden hacerlo)
   deleteStat: async (statId) => {

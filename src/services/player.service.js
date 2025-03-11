@@ -113,6 +113,36 @@ const playerService = {
       return null;
     }
   },
+
+  // Obtener jugadores con sus estadísticas
+  getPlayersWithStats: async (teamId) => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        console.log("No se encontró el token de autenticación.");
+        return [];
+      }
+
+      const response = await axios.get(`${API_URL}/api/players/team/${teamId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Aquí haces un segundo request para obtener las estadísticas de cada jugador usando su stats ObjectId
+      const playersWithStats = await Promise.all(response.data.map(async (player) => {
+        const statsResponse = await axios.get(`${API_URL}/api/stats/${player.stats}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return { ...player, stats: statsResponse.data };
+      }));
+
+      return playersWithStats;
+    } catch (error) {
+      console.error("Error al obtener los jugadores con sus estadísticas:", error);
+      return [];
+    }
+  },
+
 };
 
 export default playerService;

@@ -29,7 +29,7 @@ function CreateTeamButton({ onCreateTeam }) {
 
   return (
     <Box>
-      <Button variant="contained" color="primary" onClick={handleOpen} sx={{ mt: 2 }}>
+      <Button variant="contained" color="primary" onClick={handleOpen} sx={{ mt: 2, bgcolor:"#2d8384" }}>
         Crear Equipo
       </Button>
 

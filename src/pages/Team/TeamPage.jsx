@@ -9,7 +9,7 @@ import { useTeam } from "../../context/team.context";
 const TeamPage = () => {
   const { teamId } = useParams();
   const { user } = useUser();
-  const {team, setTeam, players, setPlayers} = useTeam(null);
+  const { team, setTeam, players, setPlayers } = useTeam();
   const [openModal, setOpenModal] = useState(false);
   const [newPlayer, setNewPlayer] = useState({
     name: "",
@@ -28,48 +28,24 @@ const TeamPage = () => {
       try {
         const response = await teamService.getTeamById(teamId);
         console.log("Equipo recibido:", response.data);
-        setTeam(response.data); // Asigna el equipo
-
-        // Ya no es necesario manejar los jugadores desde localStorage
-        /* setPlayers(response.data.players); */ // Asigna los jugadores del equipo
+        setTeam(response.data); // Actualiza el equipo en el contexto
+        setPlayers(response.data.players || []); // Actualiza los jugadores en el contexto
       } catch (error) {
         console.error("Error fetching team:", error);
       }
     };
 
     fetchTeam();
-  }, [teamId]);
-  
-  // Obtener los jugadores del equipo al cargar la página
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      if (!teamId) return; // No hacer nada si no tenemos teamId
-  
-      try {
-        // Solicita los jugadores directamente desde la API
-        const playersData = await playerService.getPlayers(teamId);
-        setPlayers(playersData); // Asigna los jugadores obtenidos de la API
-      } catch (error) {
-        console.error("Error al obtener los jugadores:", error);
-      }
-    };
-  
-    fetchPlayers();
-  }, [teamId]); // Dependencia de `teamId`
-  
-  
+  }, [teamId, setTeam, setPlayers]);
 
-  // Abrir el modal para añadir un jugador
   const handleOpenModal = () => {
     setOpenModal(true);
   };
 
-  // Cerrar el modal
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  // Manejar cambios en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewPlayer({ ...newPlayer, [name]: value });
@@ -80,68 +56,55 @@ const TeamPage = () => {
       console.error("Error: El equipo no tiene un ID válido.");
       return;
     }
-  
+
     const newPlayerData = {
       ...newPlayer,
       team: team._id,
     };
-  
-    console.log("Datos enviados al backend:", newPlayerData);
-  
+
     try {
-      await playerService.createPlayer(newPlayerData);
-      console.log("Jugador creado con éxito.");
-  
-      // Después de crear el jugador, puedes hacer una nueva solicitud a la API para obtener la lista actualizada de jugadores
-      const playersData = await playerService.getPlayers(team._id);
-      setPlayers(playersData); // Actualiza los jugadores con los datos más recientes
-  
-      // También puedes optar por agregar el nuevo jugador directamente al estado si prefieres no hacer la llamada de nuevo
-      // setPlayers((prevPlayers) => [...prevPlayers, newPlayerData]);
-  
+      const createdPlayer = await playerService.createPlayer(newPlayerData);
+      console.log("Jugador creado con éxito:", createdPlayer);
+
+      // Agrega el nuevo jugador directamente al estado
+      setPlayers((prevPlayers) => [...prevPlayers, createdPlayer]);
+
+      // Cierra el modal y limpia el formulario
+      setOpenModal(false);
+      setNewPlayer({ name: "", age: "", position: "", team: "" });
     } catch (error) {
       console.error("Error al crear el jugador:", error);
     }
   };
-  
-  
-  
-  
-  
 
-  // Eliminar un jugador
   const handleDeletePlayer = async (playerId) => {
     try {
-      await playerService.deletePlayer(playerId); // Llama al servicio para eliminar el jugador
-      const updatedPlayers = players.filter((player) => player._id !== playerId); // Actualiza el estado eliminando el jugador
-      setPlayers(updatedPlayers); // Actualiza el estado con los jugadores restantes
+      await playerService.deletePlayer(playerId);
+      const updatedPlayers = players.filter((player) => player._id !== playerId);
+      setPlayers(updatedPlayers);
     } catch (error) {
       console.error("Error al eliminar el jugador:", error);
     }
   };
-  
 
   return (
     <>
       <Container maxWidth="md">
-        <Box mt={5} mb={5} >
-          <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)"}}>
+        <Box mt={7} mb={7}>
+          <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)" }}>
             <CardContent>
               {team ? (
-                <>
-                  <Typography variant="h4" mb={5} gutterBottom>Equipo: {team.name}</Typography>
-                </>
+                <Typography variant="h4" mb={5} gutterBottom>{team.name}</Typography>
               ) : (
                 <Typography variant="body1">Cargando equipo...</Typography>
               )}
-              {/* Botón para añadir jugadores */}
-              <Button variant="contained" color="primary" onClick={handleOpenModal}>
+              <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ bgcolor: "#2d8384" }}>
                 Añadir Jugadores
               </Button>
             </CardContent>
           </Card>
         </Box>
-        {/* Modal para añadir jugadores */}
+
         <Modal open={openModal} onClose={handleCloseModal}>
           <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400, bgcolor: "background.paper", boxShadow: 24, p: 4 }}>
             <Typography variant="h6" gutterBottom>Añadir Nuevo Jugador</Typography>
@@ -157,28 +120,19 @@ const TeamPage = () => {
           </Box>
         </Modal>
       </Container>
+
       <Container>
-        {/* Lista de jugadores del equipo */}
         <Box sx={{ mt: 4 }}>
           {players && players.length > 0 ? (
             <Grid2 container spacing={3}>
-              {players.filter((player) => player !== null && player !== undefined).map((player) => (
+              {players.map((player) => (
                 <Grid2 item xs={12} sm={6} md={3} key={player._id}>
-                  {/* Card de jugador, con el mismo estilo que la Card del equipo */}
-                  <Card sx={{ padding: 0, textAlign: "center", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)",
-                  height: "100%", width: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between", transition: "transform 0.2s, box-shadow 0.2s",
-                  "&:hover": {transform: "scale(1.05)", boxShadow: 20 }}}>
+                  <Card sx={{ padding: 0, textAlign: "center", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%", width: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "scale(1.05)", boxShadow: 20 } }}>
                     <CardContent>
                       <Typography variant="h6" mb={1}>{player.name}</Typography>
                       <Typography variant="body1" mb={1}>{player.age} años</Typography>
                       <Typography variant="body1">{player.position}</Typography>
-                      {/* Botón para eliminar jugador */}
-                      <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ mt: 2 }}
-                        onClick={() => handleDeletePlayer(player._id)} // Llama a la función para eliminar el jugador
-                      >
+                      <Button variant="contained" color="error" sx={{ mt: 2 }} onClick={() => handleDeletePlayer(player._id)}>
                         Eliminar
                       </Button>
                     </CardContent>
@@ -187,10 +141,18 @@ const TeamPage = () => {
               ))}
             </Grid2>
           ) : (
-            <Typography variant="body1" color="rgba(0, 255, 255)">No hay jugadores en este equipo.</Typography>
+            <Box display="flex" justifyContent="center" mt={3}>
+              <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 3 }}>
+                <CardContent>
+                  <Typography variant="h5" textAlign="center">
+                    No hay jugadores en este equipo
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
           )}
         </Box>
-      </Container >
+      </Container>
     </>
   );
 };
