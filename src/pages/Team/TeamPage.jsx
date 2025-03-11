@@ -121,8 +121,8 @@ const TeamPage = () => {
         </Modal>
       </Container>
 
-      <Container>
-        <Box sx={{ mt: 4 }}>
+      <Container maxWidth="xl">
+        <Box display="flex" justifyContent="center" sx={{ mt: 4 }}>
           {players && players.length > 0 ? (
             <Grid2 container spacing={3}>
               {players.map((player) => (

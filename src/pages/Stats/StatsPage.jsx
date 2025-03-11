@@ -3,9 +3,12 @@ import { useParams } from "react-router-dom";
 import playerService from "../../services/player.service";
 import statsService from "../../services/stats.service";
 import {
-  Typography, Box, CircularProgress, Container, Card, CardContent, Button, Grid2, TextField,
+  Typography, Box, CircularProgress, Container, Card, CardContent, Button, TextField,
   Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, FormControl, InputLabel
 } from "@mui/material";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const StatsPage = () => {
   const { teamId } = useParams();
@@ -13,9 +16,8 @@ const StatsPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [open, setOpen] = useState(false);
-  const [filter, setFilter] = useState("Todos los jugadores"); // Estado para el filtro
+  const [filter, setFilter] = useState("Todos los jugadores");
 
-  // Estado para las estadísticas
   const [newStats, setNewStats] = useState({
     matchs: 0, minutes: 0, goals: 0, asists: 0, saves: 0,
     goalsConceded: 0, cleanSheet: 0, shootsOnGoalReceived: 0, goalsShoots: 0,
@@ -62,12 +64,44 @@ const StatsPage = () => {
     }
   };
 
-  // Función para filtrar jugadores según la posición seleccionada
   const filteredPlayers = players.filter((player) => {
     if (filter === "Todos los jugadores") return true;
-    if (filter === "Avanzada") return true; // Placeholder para futuras modificaciones
+    if (filter === "Avanzada") return true;
     return player.position === filter;
   });
+
+  // Configuración del carrusel con react-slick
+  const sliderSettings = {
+    dots: false, // Oculta los puntos de navegación
+    infinite: true, // Navegación circular
+    speed: 500, // Velocidad de transición
+    slidesToShow: 4, // Muestra 4 tarjetas a la vez
+    slidesToScroll: 1, // Número de tarjetas a desplazar
+    arrows: true, // Muestra flechas
+    responsive: [
+      {
+        breakpoint: 1024, // Ajustes para pantallas más pequeñas
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
 
   return (
     <>
@@ -76,10 +110,9 @@ const StatsPage = () => {
           <Card sx={{ padding: 4, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)" }}>
             <CardContent>
               <Typography variant="h4" gutterBottom>Estadísticas de Jugadores</Typography>
-              {/* Select para filtrar jugadores */}
-              <FormControl fullWidth color="white" sx={{ mt: 2}} >
+              <FormControl fullWidth color="white" sx={{ mt: 2 }}>
                 <InputLabel>Filtrar por posición</InputLabel>
-                <Select sx={{borderRadius:"20px", bgcolor:"#52eef0"}} value={filter} onChange={(e) => setFilter(e.target.value)}>
+                <Select sx={{ borderRadius: "20px", bgcolor: "#52eef0" }} value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <MenuItem value="Todos los jugadores">Todos los jugadores</MenuItem>
                   <MenuItem value="Portero">Porteros</MenuItem>
                   <MenuItem value="Defensa">Defensas</MenuItem>
@@ -104,10 +137,58 @@ const StatsPage = () => {
           </Box>
         ) : (
           <Box mt={5} mb={5} textAlign="center">
-            <Grid2 container spacing={3} justifyContent="center">
-              {filteredPlayers.map((player) => (
-                <Grid2 item xs={12} sm={6} md={2.4} key={player._id}>
-                  <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 2 }}>
+            {/* Mostrar carrusel solo si hay más de 4 jugadores */}
+            {filteredPlayers.length > 4 ? (
+              <Slider {...sliderSettings}>
+                {filteredPlayers.map((player) => (
+                  <Box key={player._id} sx={{ padding: 1 }}>
+                    <Card
+                      sx={{
+                        width: "300px", // Ancho fijo para cada tarjeta
+                        boxShadow: 10,
+                        borderRadius: 5,
+                        background: "rgba(0, 255, 255, 0.7)",
+                        backdropFilter: "blur(8px)",
+                        padding: 2,
+                      }}
+                    >
+                      <CardContent>
+                        <Typography variant="h6" mb={1}>{player.name}</Typography>
+                        {Object.keys(newStats).map((stat) => (
+                          <Typography key={stat} variant="body1" mb={1}>
+                            {stat.replace(/([A-Z])/g, " $1")}: {player.stats?.[stat] || 0}
+                          </Typography>
+                        ))}
+                        <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
+                          Editar Estadísticas
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                ))}
+              </Slider>
+            ) : (
+              // Mostrar tarjetas centradas si hay 4 o menos jugadores
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 2,
+                  flexWrap: "wrap",
+                }}
+              >
+                {filteredPlayers.map((player) => (
+                  <Card
+                    key={player._id}
+                    sx={{
+                      width: "300px", // Ancho fijo para cada tarjeta
+                      boxShadow: 10,
+                      borderRadius: 5,
+                      background: "rgba(0, 255, 255, 0.7)",
+                      backdropFilter: "blur(8px)",
+                      padding: 2,
+                    }}
+                  >
                     <CardContent>
                       <Typography variant="h6" mb={1}>{player.name}</Typography>
                       {Object.keys(newStats).map((stat) => (
@@ -115,16 +196,17 @@ const StatsPage = () => {
                           {stat.replace(/([A-Z])/g, " $1")}: {player.stats?.[stat] || 0}
                         </Typography>
                       ))}
-                      <Button color="primary" variant="contained" sx={{ bgcolor:"#135d5e"}} onClick={() => handleEditStats(player)}>Editar Estadísticas</Button>
+                      <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
+                        Editar Estadísticas
+                      </Button>
                     </CardContent>
                   </Card>
-                </Grid2>
-              ))}
-            </Grid2>
+                ))}
+              </Box>
+            )}
           </Box>
         )}
 
-        {/* Modal para editar estadísticas */}
         <Dialog open={open} onClose={() => setOpen(false)}>
           <DialogTitle>Editar Estadísticas de {selectedPlayer?.name}</DialogTitle>
           <DialogContent>
@@ -151,4 +233,3 @@ const StatsPage = () => {
 };
 
 export default StatsPage;
-
