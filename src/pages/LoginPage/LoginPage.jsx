@@ -16,11 +16,11 @@ function LoginPage() {
   const { setUser } = useContext(UserContext);
 
   // Redirigir si el usuario ya está logueado
-  useEffect(() => {
+ /*  useEffect(() => {
     if (isLoggedIn) {
       navigate("/profile"); // Redirigir a ProfilePage si está logueado
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate]); */
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();

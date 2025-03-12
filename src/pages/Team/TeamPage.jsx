@@ -98,9 +98,11 @@ const TeamPage = () => {
               ) : (
                 <Typography variant="body1">Cargando equipo...</Typography>
               )}
-              <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ bgcolor: "#2d8384" }}>
-                Añadir Jugadores
-              </Button>
+              {user?.role === "Analyst" && (
+                <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ bgcolor: "#2d8384" }}>
+                  Añadir Jugadores
+                </Button>
+              )}
             </CardContent>
           </Card>
         </Box>
@@ -122,9 +124,9 @@ const TeamPage = () => {
       </Container>
 
       <Container maxWidth="xl">
-        <Box display="flex" justifyContent="center" sx={{ mt: 4 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" width="100%" sx={{ mt: 4, width: "100%" }}>
           {players && players.length > 0 ? (
-            <Grid2 container spacing={3}>
+            <Grid2 container spacing={3} justifyContent="center">
               {players.map((player) => (
                 <Grid2 item xs={12} sm={6} md={3} key={player._id}>
                   <Card sx={{ padding: 0, textAlign: "center", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%", width: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between", transition: "transform 0.2s, box-shadow 0.2s", "&:hover": { transform: "scale(1.05)", boxShadow: 20 } }}>
@@ -132,9 +134,11 @@ const TeamPage = () => {
                       <Typography variant="h6" mb={1}>{player.name}</Typography>
                       <Typography variant="body1" mb={1}>{player.age} años</Typography>
                       <Typography variant="body1">{player.position}</Typography>
-                      <Button variant="contained" color="error" sx={{ mt: 2 }} onClick={() => handleDeletePlayer(player._id)}>
+                      {user?.role === "Analyst" && (
+                        <Button variant="contained" color="error" sx={{ mt: 2 }} onClick={() => handleDeletePlayer(player._id)}>
                         Eliminar
                       </Button>
+                      )}    
                     </CardContent>
                   </Card>
                 </Grid2>

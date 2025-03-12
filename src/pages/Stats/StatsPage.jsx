@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import playerService from "../../services/player.service";
 import statsService from "../../services/stats.service";
+import { useUser } from "../../context/user.context";
 import {
   Typography, Box, CircularProgress, Container, Card, CardContent, Button, TextField,
   Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, FormControl, InputLabel
@@ -12,6 +13,7 @@ import "slick-carousel/slick/slick-theme.css";
 import AdvancedStatsPage from "./AdvancedStatsPage"
 
 const StatsPage = () => {
+  const { user } = useUser();
   const { teamId } = useParams();
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -235,9 +237,11 @@ const StatsPage = () => {
                             {/* Agrega más estadísticas avanzadas aquí */}
                           </>
                         )}
-                        <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
+                        {user?.role === "Analyst" && (
+                          <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
                           Editar Estadísticas
                         </Button>
+                        )}   
                       </CardContent>
                     </Card>
                   ))}
