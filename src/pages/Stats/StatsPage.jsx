@@ -9,6 +9,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import AdvancedStatsPage from "./AdvancedStatsPage"
 
 const StatsPage = () => {
   const { teamId } = useParams();
@@ -42,15 +43,13 @@ const StatsPage = () => {
   const handleEditStats = (player) => {
     setSelectedPlayer(player);
     setNewStats({
-      matchs: player.stats?.matchs || 0, minutes: player.stats?.minutes || 0,
-      goals: player.stats?.goals || 0, asists: player.stats?.asists || 0,
-      saves: player.stats?.saves || 0, goalsConceded: player.stats?.goalsConceded || 0,
-      cleanSheet: player.stats?.cleanSheet || 0, shootsOnGoalReceived: player.stats?.shootsOnGoalReceived || 0,
-      goalsShoots: player.stats?.goalsShoots || 0, outShoots: player.stats?.outShoots || 0,
-      triedDribblings: player.stats?.triedDribblings || 0, succesDribblings: player.stats?.succesDribblings || 0,
-      triedTackles: player.stats?.triedTackles || 0, succesTackles: player.stats?.succesTackles || 0,
-      triedPass: player.stats?.triedPass || 0, succesPass: player.stats?.succesPass || 0,
-      turnoversBall: player.stats?.turnoversBall || 0, stealsBall: player.stats?.stealsBall || 0,
+      matchs: 0, minutes: 0, goals: 0, asists: 0,
+      saves: 0, goalsConceded: 0, cleanSheet: 0,
+      shootsOnGoalReceived: 0, goalsShoots: 0,
+      outShoots: 0, triedDribblings: 0,
+      succesDribblings: 0, triedTackles: 0,
+      succesTackles: 0, triedPass: 0,
+      succesPass: 0, turnoversBall: 0, stealsBall: 0,
     });
     setOpen(true);
   };
@@ -65,10 +64,33 @@ const StatsPage = () => {
   };
 
   const filteredPlayers = players.filter((player) => {
+    console.log("filter:", filter, "player.position:", player.position);
     if (filter === "Todos los jugadores") return true;
     if (filter === "Avanzada") return true;
     return player.position === filter;
   });
+
+  const statTranslations = {
+    matchs: "Partidos",
+    minutes: "Minutos",
+    goals: "Goles",
+    asists: "Asistencias",
+    saves: "Paradas",
+    goalsConceded: "Goles Concedidos",
+    cleanSheet: "Portería a Cero",
+    shootsOnGoalReceived: "Tiros Recibidos",
+    goalsShoots: "Tiros a Portería",
+    outShoots: "Tiros Fuera",
+    triedDribblings: "Regates Intentados",
+    succesDribblings: "Regates Exitosos",
+    triedTackles: "Entradas Intentadas",
+    succesTackles: "Entradas Exitosas",
+    triedPass: "Pases Intentados",
+    succesPass: "Pases Exitosos",
+    turnoversBall: "Pérdidas de Balón",
+    stealsBall: "Robos de Balón",
+  };
+
 
   // Configuración del carrusel con react-slick
   const sliderSettings = {
@@ -127,109 +149,130 @@ const StatsPage = () => {
       </Container>
 
       <Container maxWidth="xl">
-        {filteredPlayers.length === 0 ? (
-          <Box display="flex" justifyContent="center" mt={3}>
-            <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 3 }}>
-              <CardContent>
-                <Typography variant="h5" textAlign="center">No hay jugadores en esta categoría.</Typography>
-              </CardContent>
-            </Card>
-          </Box>
+        {filter === "Avanzada" ? (
+          <AdvancedStatsPage players={players} />
         ) : (
-          <Box mt={5} mb={5} textAlign="center">
-            {/* Mostrar carrusel solo si hay más de 4 jugadores */}
-            {filteredPlayers.length > 4 ? (
-              <Slider {...sliderSettings}>
-                {filteredPlayers.map((player) => (
-                  <Box key={player._id} sx={{ padding: 1 }}>
-                    <Card
-                      sx={{
-                        width: "300px", // Ancho fijo para cada tarjeta
-                        boxShadow: 10,
-                        borderRadius: 5,
-                        background: "rgba(0, 255, 255, 0.7)",
-                        backdropFilter: "blur(8px)",
-                        padding: 2,
-                      }}
-                    >
+          filteredPlayers.length === 0 ? (
+            <Box display="flex" justifyContent="center" mt={3}>
+              <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 3 }}>
+                <CardContent>
+                  <Typography variant="h5" textAlign="center">No hay jugadores en esta categoría.</Typography>
+                </CardContent>
+              </Card>
+            </Box>
+          ) : (
+            <Box mt={5} mb={5} textAlign="center">
+              {/* Mostrar carrusel solo si hay más de 4 jugadores */}
+              {filteredPlayers.length > 4 ? (
+                <Slider {...sliderSettings}>
+                  {filteredPlayers.map((player) => (
+                    <Box key={player._id} sx={{ padding: 1 }}>
+                      <Card sx={{ width: "300px", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 2 }}>
+                        <CardContent>
+                          <Typography variant="h6" mb={1}>{player.name}</Typography>
+                          {Object.entries(player.stats)  // Usamos Object.entries para obtener claves y valores
+                            .filter(([key]) => !["_id", "createdBy", "__v"].includes(key))  // Filtrar los campos no deseados
+                            .filter(([key, value]) => typeof value === 'number')  // Filtrar los campos con valores numéricos
+                            .filter(([key]) =>
+                              player.position === "Portero"
+                                ? ["matchs", "minutes", "saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived", "triedPass", "succesPass"].includes(key)
+                                : !["saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived"].includes(key)
+                            )
+                            .map(([stat, value]) => {
+                              const statNameInSpanish = statTranslations[stat] || stat; // Si no hay traducción, se usa el nombre original
+                              const statValue = value || 0; // Si el valor no existe, usar 0
+                              return (
+                                <Typography key={stat} variant="body1" mb={1}>
+                                  {statNameInSpanish}: {statValue}
+                                </Typography>
+                              );
+                            })}
+                          {filter === "Avanzada" && (
+                            // Aquí agregas las estadísticas avanzadas para la opción "Avanzada"
+                            <>
+                              <Typography variant="body1" mb={1}>Estadísticas Avanzadas:</Typography>
+                              <Typography variant="body2" mb={1}>Pases Completos: {player.stats.succesPass + player.stats.triedPass}</Typography>
+                              <Typography variant="body2" mb={1}>Regates Completos: {player.stats.succesDribblings}</Typography>
+                              {/* Agrega otras estadísticas avanzadas que quieras mostrar */}
+                            </>
+                          )}
+                          <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
+                            Editar Estadísticas
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Slider>
+              ) : (
+                <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+                  {filteredPlayers.map((player) => (
+                    <Card key={player._id} sx={{ width: "300px", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 2 }}>
                       <CardContent>
                         <Typography variant="h6" mb={1}>{player.name}</Typography>
-                        {Object.keys(newStats).map((stat) => (
-                          <Typography key={stat} variant="body1" mb={1}>
-                            {stat.replace(/([A-Z])/g, " $1")}: {player.stats?.[stat] || 0}
-                          </Typography>
-                        ))}
+                        {Object.entries(player.stats)  // Usamos Object.entries para obtener claves y valores
+                          .filter(([key]) => !["_id", "createdBy", "__v"].includes(key))  // Filtrar los campos no deseados
+                          .filter(([key, value]) => typeof value === 'number')  // Filtrar los campos con valores numéricos
+                          .filter(([key]) =>
+                            player.position === "Portero"
+                              ? ["matchs", "minutes", "saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived", "triedPass", "succesPass"].includes(key)
+                              : !["saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived"].includes(key)
+                          )
+                          .map(([stat, value]) => {
+                            const statNameInSpanish = statTranslations[stat] || stat; // Si no hay traducción, se usa el nombre original
+                            const statValue = value || 0; // Si el valor no existe, usar 0
+                            return (
+                              <Typography key={stat} variant="body1" mb={1}>
+                                {statNameInSpanish}: {statValue}
+                              </Typography>
+                            );
+                          })}
+                        {filter === "Avanzada" && (
+                          <>
+                            <Typography variant="body1" mb={1}>Estadísticas Avanzadas:</Typography>
+                            <Typography variant="body2" mb={1}>Pases Completos: {player.stats.succesPass + player.stats.triedPass}</Typography>
+                            <Typography variant="body2" mb={1}>Regates Completos: {player.stats.succesDribblings}</Typography>
+                            {/* Agrega más estadísticas avanzadas aquí */}
+                          </>
+                        )}
                         <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
                           Editar Estadísticas
                         </Button>
                       </CardContent>
                     </Card>
-                  </Box>
-                ))}
-              </Slider>
-            ) : (
-              // Mostrar tarjetas centradas si hay 4 o menos jugadores
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 2,
-                  flexWrap: "wrap",
-                }}
-              >
-                {filteredPlayers.map((player) => (
-                  <Card
-                    key={player._id}
-                    sx={{
-                      width: "300px", // Ancho fijo para cada tarjeta
-                      boxShadow: 10,
-                      borderRadius: 5,
-                      background: "rgba(0, 255, 255, 0.7)",
-                      backdropFilter: "blur(8px)",
-                      padding: 2,
-                    }}
-                  >
-                    <CardContent>
-                      <Typography variant="h6" mb={1}>{player.name}</Typography>
-                      {Object.keys(newStats).map((stat) => (
-                        <Typography key={stat} variant="body1" mb={1}>
-                          {stat.replace(/([A-Z])/g, " $1")}: {player.stats?.[stat] || 0}
-                        </Typography>
-                      ))}
-                      <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
-                        Editar Estadísticas
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
-            )}
-          </Box>
+                  ))}
+                </Box>
+              )}
+            </Box>
+          )
         )}
-
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>Editar Estadísticas de {selectedPlayer?.name}</DialogTitle>
-          <DialogContent>
-            {Object.keys(newStats).map((stat) => (
-              <TextField
-                key={stat}
-                label={stat.replace(/([A-Z])/g, " $1")}
-                type="number"
-                value={newStats[stat]}
-                onChange={(e) => setNewStats({ ...newStats, [stat]: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">Cancelar</Button>
-            <Button onClick={handleSaveStats} color="primary">Guardar</Button>
-          </DialogActions>
-        </Dialog>
       </Container>
+
+
+
+      {/* Diálogo de edición */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Editar Estadísticas de {selectedPlayer?.name}</DialogTitle>
+        <DialogContent>
+          {Object.keys(newStats).map((stat) => (
+            <TextField
+              key={stat}
+              label={stat.replace(/([A-Z])/g, " $1")}
+              type="number"
+              value={newStats[stat]}
+              onChange={(e) => setNewStats({ ...newStats, [stat]: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">Cancelar</Button>
+          <Button onClick={handleSaveStats} color="primary">Guardar</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
-};
+}
 
 export default StatsPage;
