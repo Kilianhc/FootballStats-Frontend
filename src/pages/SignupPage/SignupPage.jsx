@@ -50,6 +50,7 @@ return (
         width: "350px",
         textAlign: "center",
         color: "white",
+        mt: -10
       }}
     >
       <Typography variant="h5" fontWeight="bold">

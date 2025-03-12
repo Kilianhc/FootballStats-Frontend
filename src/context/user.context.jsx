@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from "react";
 
-const UserContext = createContext();
+// Exporta el contexto
+export const UserContext = createContext();
 
+// UserProvider que envuelve a los hijos y proporciona el contexto
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
@@ -12,4 +14,5 @@ export const UserProvider = ({ children }) => {
   );
 };
 
+// Custom hook para acceder al contexto
 export const useUser = () => useContext(UserContext);
