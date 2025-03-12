@@ -45,7 +45,7 @@ const StatsPage = () => {
     setNewStats({
       matchs: 0, minutes: 0, goals: 0, asists: 0,
       saves: 0, goalsConceded: 0, cleanSheet: 0,
-      shootsOnGoalReceived: 0, goalsShoots: 0,
+      shootsOnGoalReceived: 0, goalShoots: 0,
       outShoots: 0, triedDribblings: 0,
       succesDribblings: 0, triedTackles: 0,
       succesTackles: 0, triedPass: 0,
@@ -79,7 +79,7 @@ const StatsPage = () => {
     goalsConceded: "Goles Concedidos",
     cleanSheet: "Portería a Cero",
     shootsOnGoalReceived: "Tiros Recibidos",
-    goalsShoots: "Tiros a Portería",
+    goalShoots: "Tiros a Portería",
     outShoots: "Tiros Fuera",
     triedDribblings: "Regates Intentados",
     succesDribblings: "Regates Exitosos",

@@ -119,15 +119,16 @@ const AdvancedStatsPage = ({ players }) => {
                     <Grid item xs={12} sm={6} md={6}>
                         <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
                             <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Tiros Exitosos (Delanteros)</Typography>
+                                <Typography variant="h6" mb={2}>Disparos a Puerta vs Disparos Fuera (Delanteros)</Typography>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros, "triedTackles", "succesTackles", true)}>
+                                    <BarChart data={createChartData(advancedStats.delanteros, "goalShoots", "outShoots")}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis fontSize="x-large" dataKey="name" />
                                         <YAxis unit="%" />
                                         <Tooltip />
                                         <Legend />
-                                        <Bar dataKey="percentage" fill="#93900f" />
+                                        <Bar dataKey="value1" fill="#93900f" />
+                                        <Bar dataKey="value2" fill="#bb5005" />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </CardContent>
