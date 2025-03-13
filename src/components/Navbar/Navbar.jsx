@@ -50,8 +50,9 @@ function Navbar() {
           </IconButton>
         )}
 
-<Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer(false)}>
-  <Box sx={{ width: 250, bgcolor: "#52eef0", height: "100vh", padding: 2 }}>
+<Drawer anchor="center" slotProps={{paper: {sx: {background: "none", boxShadow: "none", height: "auto",
+  position: "absolute", top: "7%", transform: "translateY(-30%)"}}}} open={isDrawerOpen} onClose={toggleDrawer(false)}>
+  <Box sx={{ width: 200, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(10px)", height: "20vh", padding: 2 }}>
     <List>
       {/* Perfil con icono */}
       <ListItem button component={Link} to="/profile" onClick={toggleDrawer(false)}>

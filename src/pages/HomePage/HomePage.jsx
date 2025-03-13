@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png"
 
@@ -33,25 +33,79 @@ function HomePage() {
     opacity: 0.3, // Hace que el logo se mezcle un poco con el fondo
   }}
 />
-      <Button
-        component={Link}
-        to="/signup"
-        variant="contained"
-        color="primary"
-        size="large"
-        sx={{
-          padding: 2,
-          bgcolor: "#2d8384",
-          transition: "transform 0.2s, background-color 0.2s",
-          "&:hover": {
-            transform: "scale(1.05)",
-            bgcolor: "#3bb9bb",
-          },
-        }}
-      >
-        Mejora el rendimiento de tu Equipo
-      </Button>
-    </Box></>
+        {/* Texto animado */}
+        <Box
+          sx={{
+            animation: "fadeInUp 2s ease-in-out", // Animación para el texto
+            maxWidth: "600px", // Para que no ocupe todo el ancho de la pantalla
+            mb: 3,
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              letterSpacing: "2px",
+              fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
+              lineHeight: 1.5,
+              color: "#ffffff",
+              opacity: 0,
+              animation: "fadeInUp 2s forwards", // El texto será visible tras la animación
+            }}
+          >
+            Potencia tu análisis y optimiza a tu equipo
+          </Typography>
+          <Typography
+            variant="h5"
+            sx={{
+              mt: 2,
+              fontWeight: "500",
+              fontSize: { xs: "1rem", sm: "1.2rem", md: "1.5rem" },
+              color: "#ffffff",
+              opacity: 0,
+              animation: "fadeInUp 10s 0.5s forwards", // Retraso para la animación
+            }}
+          >
+          </Typography>
+        </Box>
+
+        {/* Botón de registro */}
+        <Button
+          component={Link}
+          to="/signup"
+          variant="contained"
+          color="primary"
+          size="large"
+          sx={{
+            padding: 2,
+            bgcolor: "#2d8384",
+            transition: "transform 0.2s, background-color 0.2s",
+            "&:hover": {
+              transform: "scale(1.05)",
+              bgcolor: "#3bb9bb",
+            },
+            opacity: 0,
+            animation: "fadeInUp 5s 1s forwards", // El botón aparecerá después de un pequeño retraso
+          }}
+        >
+          Regístrate ahora
+        </Button>
+      </Box>
+
+      {/* Animaciones clave en el CSS */}
+      <style>{`
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(50px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </>
   );
 }
 

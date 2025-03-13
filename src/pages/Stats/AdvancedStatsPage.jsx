@@ -51,7 +51,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.defensas, "triedTackles", "succesTackles", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
                                         <Tooltip />
                                         <Legend />
@@ -68,7 +68,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.delanteros, "triedDribblings", "succesDribblings", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
                                         <Tooltip />
                                         <Legend />
@@ -86,7 +86,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.centrocampistas, "triedPass", "succesPass", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
                                         <Tooltip />
                                         <Legend />
@@ -104,8 +104,8 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.delanteros, "goalShoots", "outShoots")}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
-                                        <YAxis unit="%" />
+                                        <XAxis fontSize="12px" dataKey="name" />
+                                        <YAxis />
                                         <Tooltip />
                                         <Legend />
                                         <Bar dataKey="value1" fill="#93900f" />
@@ -124,7 +124,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.porteros, "shootsOnGoalReceived", "goalsConceded", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
                                         <Tooltip />
                                         <Legend />
@@ -141,7 +141,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis />
                                         <Tooltip />
                                         <Legend />
@@ -159,7 +159,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis />
                                         <Tooltip />
                                         <Legend />
@@ -177,7 +177,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis />
                                         <Tooltip />
                                         <Legend />
@@ -195,7 +195,7 @@ const AdvancedStatsPage = ({ players }) => {
                                 <ResponsiveContainer width="100%" height={300}>
                                     <BarChart data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="x-large" dataKey="name" />
+                                        <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis />
                                         <Tooltip />
                                         <Legend />

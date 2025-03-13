@@ -198,9 +198,11 @@ const StatsPage = () => {
                               {/* Agrega otras estadísticas avanzadas que quieras mostrar */}
                             </>
                           )}
+                          {user?.role === "Analyst" && (
                           <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
-                            Editar Estadísticas
-                          </Button>
+                          Editar Estadísticas
+                        </Button>
+                        )} 
                         </CardContent>
                       </Card>
                     </Box>

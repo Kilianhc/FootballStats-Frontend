@@ -6,11 +6,26 @@ function TeamSearchAndRequest({ teams, selectedTeam, onSelectTeam, onSendRequest
       <Autocomplete
         options={teams}
         getOptionLabel={(option) => option.name}
-        onChange={(event, value) => onSelectTeam(value)}
-        renderInput={(params) => <TextField {...params} label="Buscar equipo" variant="outlined" />}
+        onChange={(event, value) => onSelectTeam(value)}  // Actualiza el equipo seleccionado
+        value={selectedTeam}  // Esto asegura que el equipo seleccionado se muestra correctamente
+        renderInput={(params) => <TextField {...params} label="Buscar equipo" variant="outlined"
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "#52eef0",
+            "& fieldset": {
+              borderColor: "#4caf50", // Cambiar color del borde cuando no está enfocado
+            },
+            "&:hover fieldset": {
+              borderColor: "#81c784", // Color del borde cuando el campo está enfocado
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#66bb6a", // Borde cuando el campo está enfocado
+            },
+          }
+        }} />}
       />
-      <Button variant="contained" color="primary" onClick={onSendRequest} sx={{ mt: 2 }}>
-        Enviar solicitud
+      <Button variant="contained" onClick={onSendRequest} sx={{ mt: 5, bgcolor:"#1498b5"  }}>
+        Asignar Equipo
       </Button>
     </Box>
   );
