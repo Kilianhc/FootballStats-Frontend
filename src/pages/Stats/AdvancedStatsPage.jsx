@@ -175,7 +175,7 @@ const AdvancedStatsPage = ({ players }) => {
                             <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                                 <Typography variant="h6" mb={2}>% de Goles/Minutos (Delanteros)</Typography>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros, "goals", "minutes", true)}>
+                                    <BarChart data={createChartData(advancedStats.delanteros,  "minutes","goals", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
@@ -192,7 +192,7 @@ const AdvancedStatsPage = ({ players }) => {
                             <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                                 <Typography variant="h6" mb={2}>% de Asistencias/Partidos (Centrocampistas)</Typography>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.centrocampistas, "asists", "matchs", true)}>
+                                    <BarChart data={createChartData(advancedStats.centrocampistas,  "matchs","asists", true)}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis fontSize="12px" dataKey="name" />
                                         <YAxis unit="%" />
