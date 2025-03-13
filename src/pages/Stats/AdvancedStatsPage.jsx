@@ -173,15 +173,16 @@ const AdvancedStatsPage = ({ players }) => {
                     <Grid item xs={12} sm={4} md={4}>
                         <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
                             <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Goles/Minutos (Delanteros)</Typography>
+                                <Typography variant="h6" mb={2}>Goles vs Minutos (Delanteros)</Typography>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros,  "minutes","goals", true)}>
+                                    <BarChart data={createChartData(advancedStats.delanteros,  "minutes","goals")}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
+                                        <YAxis />
                                         <Tooltip />
                                         <Legend />
-                                        <Bar dataKey="percentage" fill="#007acc" />
+                                        <Bar dataKey="value1" fill="#5c08bd" />
+                                        <Bar dataKey="value2" fill="#007acc" />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </CardContent>
@@ -190,15 +191,16 @@ const AdvancedStatsPage = ({ players }) => {
                     <Grid item xs={12} sm={4} md={4}>
                         <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
                             <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Asistencias/Partidos (Centrocampistas)</Typography>
+                                <Typography variant="h6" mb={2}>Asistencias vs Partidos (Centrocampistas)</Typography>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.centrocampistas,  "matchs","asists", true)}>
+                                    <BarChart data={createChartData(advancedStats.centrocampistas,  "matchs","asists")}>
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
+                                        <YAxis />
                                         <Tooltip />
                                         <Legend />
-                                        <Bar dataKey="percentage" fill="#5c08bd" />
+                                        <Bar dataKey="value1" fill="#5c08bd" />
+                                        <Bar dataKey="value2" fill="#007acc" />
                                     </BarChart>
                                 </ResponsiveContainer>
                             </CardContent>
