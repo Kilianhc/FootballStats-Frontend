@@ -124,7 +124,7 @@ const TeamPage = () => {
       </Container>
 
       <Container maxWidth="xl">
-        <Box display="flex" justifyContent="center" alignItems="center" width="100%" sx={{ mt: 4, width: "100%" }}>
+        <Box display="flex" justifyContent="center" alignItems="center" width="100%" sx={{mb:4, mt: 4, width: "100%" }}>
           {players && players.length > 0 ? (
             <Grid2 container spacing={3} justifyContent="center">
               {players.map((player) => (
