@@ -19,8 +19,6 @@ function AuthProviderWrapper(props) {
   const authenticateUser = () => {
     const storedToken = localStorage.getItem("authToken");
 
-    console.log("Token almacenado en localStorage:", storedToken); // Verifica que el token está aquí
-
     if (storedToken) {
       authService
         .verify()
@@ -39,7 +37,6 @@ function AuthProviderWrapper(props) {
           setUser(null);
         });
     } else {
-      console.log("No hay token almacenado.");
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
