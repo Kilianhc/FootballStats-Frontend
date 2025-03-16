@@ -27,7 +27,6 @@ const TeamPage = () => {
 
       try {
         const response = await teamService.getTeamById(teamId);
-        console.log("Equipo recibido:", response.data);
         setTeam(response.data); // Actualiza el equipo en el contexto
         setPlayers(response.data.players || []); // Actualiza los jugadores en el contexto
       } catch (error) {
