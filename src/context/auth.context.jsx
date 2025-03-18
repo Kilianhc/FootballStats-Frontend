@@ -18,21 +18,17 @@ function AuthProviderWrapper(props) {
   const { setUser: setUserFromUserContext } = useContext(UserContext);
 
   const storeToken = (token) => {
-    console.log("Token almacenado en localStorage: ", token); // Verificación del almacenamiento
     localStorage.setItem("authToken", token);
   };
 
   const authenticateUser = () => {
     const storedToken = localStorage.getItem("authToken");
 
-    console.log("Token almacenado en localStorage:", storedToken); // Verifica que el token está aquí
-
     if (storedToken) {
       authService
         .verify()
         .then((response) => {
           const user = response.data;
-          console.log("Usuario autenticado:", user); // Verifica el usuario devuelto por verify()
           setIsLoggedIn(true); 
           setIsLoading(false);
           setUser(user);
@@ -45,7 +41,6 @@ function AuthProviderWrapper(props) {
           setUser(null);
         });
     } else {
-      console.log("No hay token almacenado.");
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);

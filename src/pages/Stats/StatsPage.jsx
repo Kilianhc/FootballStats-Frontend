@@ -71,7 +71,6 @@ const StatsPage = () => {
   };
 
   const filteredPlayers = players.filter((player) => {
-    console.log("filter:", filter, "player.position:", player.position);
     if (filter === "Todos los jugadores") return true;
     if (filter === "Avanzada") return true;
     return player.position === filter;
