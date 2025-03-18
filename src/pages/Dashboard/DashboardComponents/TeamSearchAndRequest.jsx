@@ -24,9 +24,9 @@ function TeamSearchAndRequest({ teams, selectedTeam, onSelectTeam, onSendRequest
           }
         }} />}
       />
-      <Button variant="contained" onClick={onSendRequest} sx={{ mt: 5, bgcolor:"#1498b5"  }}>
+     {/*  <Button variant="contained" onClick={onSendRequest} sx={{ mt: 5, bgcolor:"#1498b5"  }}>
         Asignar Equipo
-      </Button>
+      </Button> */}
     </Box>
   );
 }

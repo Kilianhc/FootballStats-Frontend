@@ -8,6 +8,12 @@ function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser); // Actualiza en AuthContext
+    setUserFromUserContext(updatedUser); // También en UserContext
+  };
+  
+  
 
   const { setUser: setUserFromUserContext } = useContext(UserContext);
 
@@ -69,6 +75,7 @@ function AuthProviderWrapper(props) {
         authenticateUser,
         logOutUser,
         setUser: setUserFromUserContext,
+        updateUser,
       }}
     >
       {props.children}

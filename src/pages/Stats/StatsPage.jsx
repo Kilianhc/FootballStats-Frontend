@@ -29,6 +29,7 @@ const StatsPage = () => {
   });
 
   useEffect(() => {
+    console.log("teamId ha cambiado:", teamId);
     const fetchPlayersStats = async () => {
       try {
         const response = await playerService.getPlayersWithStats(teamId);
@@ -39,8 +40,12 @@ const StatsPage = () => {
         setLoading(false);
       }
     };
-    fetchPlayersStats();
+  
+    if (teamId) {
+      fetchPlayersStats();
+    }
   }, [teamId]);
+  
 
   const handleEditStats = (player) => {
     setSelectedPlayer(player);

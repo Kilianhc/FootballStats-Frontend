@@ -11,17 +11,19 @@ import { useUser } from "../../context/user.context";
 import CreateTeamButton from "../Dashboard/DashboardComponents/CreateTeamButton";
 import EditProfileDialog from "../Dashboard/DashboardComponents/EditProfileDialog";
 import TeamSearchAndRequest from "./DashboardComponents/TeamSearchAndRequest";
+import authService from "../../services/auth.service";
 
 const ProfilePage = () => {
   const { user, setUser } = useUser();
   const [teamName, setTeamName] = useState("Cargando...");
   const [openDialog, setOpenDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { logOutUser, updateUser } = useContext(AuthContext);
+  const { logOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const { updateUser } = useContext(AuthContext);
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -66,9 +68,9 @@ const ProfilePage = () => {
 
   const handleUpdateProfile = async (updatedData) => {
     try {
-      const finalData = { 
-        ...updatedData, 
-        team: updatedData.team !== undefined ? updatedData.team : user.team 
+      const finalData = {
+        ...updatedData,
+        team: updatedData.team !== undefined ? updatedData.team : user.team
       };
 
       const response = await userService.updateProfile(user._id, finalData);
@@ -78,6 +80,8 @@ const ProfilePage = () => {
       setOpenEditDialog(false);
     } catch (error) {
       console.error("Error updating profile:", error);
+
+
     }
   };
 
@@ -94,9 +98,51 @@ const ProfilePage = () => {
     }
   };
 
-  const handleSelectTeam = (team) => {
+  const handleSelectTeam = async (team) => {
     setSelectedTeam(team);
+  
+    if (!team) {
+      alert("Por favor, selecciona un equipo.");
+      return;
+    }
+  
+    try {
+      // Llamar a la API para actualizar el equipo del usuario
+      const response = await userService.updateProfile(user._id, {
+        team: team._id,  // Usamos el ID del equipo seleccionado
+      });
+  
+      // Verificar si la respuesta fue exitosa antes de continuar
+      if (response && response.data) {
+        // Actualizar el estado global (context) del usuario con el nuevo equipo
+        setUser((prevUser) => ({
+          ...prevUser,
+          team: team._id,  // Actualiza el equipo en el contexto global
+        }));
+  
+        // También actualizar el nombre del equipo
+        setTeamName(team.name);
+  
+        // Mostrar el mensaje de cambio de equipo
+        alert("Has cambiado de equipo. Por favor, reinicia sesión para poder acceder a la información del equipo.");
+  
+        // Cerrar la sesión
+        logOutUser();  // Este método debe ser el que tienes en tu contexto o servicio para hacer logout
+  
+        // Redirigir a la página de login
+        navigate("/login"); // Redirige a la página de login
+      } else {
+        alert("Hubo un error al intentar actualizar el equipo.");
+      }
+    } catch (error) {
+      console.error("Error al unirse al equipo:", error);
+      alert("Hubo un error al intentar unirte al equipo.");
+    }
   };
+  
+  
+  
+
 
   const handleSendRequest = async () => {
     if (!selectedTeam) {
@@ -110,22 +156,29 @@ const ProfilePage = () => {
         team: selectedTeam._id,  // Aquí usamos el ID del equipo seleccionado
       });
   
-      // Actualizar el estado global (context) del usuario
-      setUser((prevUser) => ({ ...prevUser, team: selectedTeam._id }));
+      // Verificar si la respuesta fue exitosa antes de continuar
+      if (response && response.data) {
+        // Actualizar el estado global (context) del usuario con el nuevo equipo
+        setUser((prevUser) => ({
+          ...prevUser,
+          team: selectedTeam._id,  // Actualiza el equipo en el contexto global
+        }));
   
-      // También actualizar el nombre del equipo
-      setTeamName(selectedTeam.name);
+        // También actualizar el nombre del equipo
+        setTeamName(selectedTeam.name);
   
-      alert("¡Te has unido al equipo exitosamente!");
+        // Obtener los datos actualizados del usuario desde la API (nuevo equipo asignado)
+        const updatedUser = await userService.getProfile();  // Re-fetch the user data
+        setUser(updatedUser.data);  // Actualiza el estado con los datos más recientes
   
-      // Puedes redirigir o actualizar la vista de alguna manera si lo deseas
-      // navigate(`/team/${selectedTeam._id}`);
-  
+        alert("¡Te has unido al equipo exitosamente!");
+      } 
     } catch (error) {
       console.error("Error al unirse al equipo:", error);
       alert("Hubo un error al intentar unirte al equipo.");
     }
   };
+  
 
   return (
     <Container maxWidth="md">
