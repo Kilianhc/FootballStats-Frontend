@@ -11,6 +11,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AdvancedStatsPage from "./AdvancedStatsPage"
+import Chatbot from "../../components/Chatbot"
 
 const StatsPage = () => {
   const { user } = useUser();
@@ -167,7 +168,7 @@ const StatsPage = () => {
               </Card>
             </Box>
           ) : (
-            <Box mt={5} mb={5} textAlign="center">
+            <Box mt={5} mb={8} textAlign="center">
               {/* Mostrar carrusel solo si hay más de 4 jugadores */}
               {filteredPlayers.length > 4 ? (
                 <Slider {...sliderSettings}>
@@ -281,6 +282,10 @@ const StatsPage = () => {
           <Button onClick={handleSaveStats} color="primary">Guardar</Button>
         </DialogActions>
       </Dialog>
+      {/* Integrar el Chatbot */}
+            <Container maxWidth="md">
+              <Chatbot />
+            </Container>
     </>
   );
 }

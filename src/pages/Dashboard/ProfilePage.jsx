@@ -12,6 +12,7 @@ import CreateTeamButton from "../Dashboard/DashboardComponents/CreateTeamButton"
 import EditProfileDialog from "../Dashboard/DashboardComponents/EditProfileDialog";
 import TeamSearchAndRequest from "./DashboardComponents/TeamSearchAndRequest";
 import authService from "../../services/auth.service";
+import Chatbot from "../../components/Chatbot"
 
 const ProfilePage = () => {
   const { user, setUser } = useUser();
@@ -181,6 +182,7 @@ const ProfilePage = () => {
   
 
   return (
+    <>
     <Container maxWidth="md">
       <Box mt={7}>
         <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)" }}>
@@ -232,6 +234,11 @@ const ProfilePage = () => {
         userData={user}
       />
     </Container>
+      {/* Integrar el Chatbot */}
+          <Container maxWidth="md">
+            <Chatbot />
+          </Container>
+    </>
   );
 };
 

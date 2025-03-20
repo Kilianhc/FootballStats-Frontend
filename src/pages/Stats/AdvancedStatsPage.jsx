@@ -38,7 +38,7 @@ const AdvancedStatsPage = ({ players }) => {
 
     return (
         <Container maxWidth="xl">
-            <Box mt={5} mb={5}>
+            <Box mt={5} mb={8}>
                 <Grid container spacing={3} justifyContent="center" alignItems="stretch">
                     {/* Segundo gráfico */}
                     
