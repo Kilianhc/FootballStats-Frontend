@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar/Navbar";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 import { TeamProvider } from "./context/team.context";
-import { AuthProviderWrapper } from "./context/auth.context"; // Importa AuthProviderWrapper
+import { AuthProviderWrapper } from "./context/auth.context";
 
 function App() {
   const location = useLocation();
@@ -29,53 +29,16 @@ function App() {
 
   return (
     <div className="App">
-      <AuthProviderWrapper> {/* Envuélvelo en AuthProviderWrapper dentro de App.jsx */}
+      <AuthProviderWrapper>
         <TeamProvider>
           <Navbar />
           <Routes>
             <Route path="/" element={<IsAnon><HomePage /></IsAnon>} />
-            <Route
-              path="/signup"
-              element={
-                <IsAnon>
-                  <SignupPage />
-                </IsAnon>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <IsAnon>
-                  <LoginPage />
-                </IsAnon>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <IsPrivate>
-                  <ProfilePage />
-                </IsPrivate>
-              }
-            />
-            <Route
-              path="/team/:teamId"
-              element={
-                <IsPrivate>
-                  <TeamPage />
-                </IsPrivate>
-              }
-            />
-            <Route
-              path="/stats/:teamId"
-              element={
-                <IsPrivate>
-                  <StatsPage />
-                </IsPrivate>
-              }
-            />
-            
-            
+            <Route path="/signup" element={<IsAnon><SignupPage /></IsAnon>}/>
+            <Route path="/login" element={<IsAnon><LoginPage /></IsAnon>}/>
+            <Route path="/profile" element={<IsPrivate><ProfilePage /></IsPrivate>}/>
+            <Route path="/team/:teamId" element={<IsPrivate><TeamPage /></IsPrivate>}/>
+            <Route path="/stats/:teamId" element={<IsPrivate><StatsPage /></IsPrivate>}/> 
           </Routes>
         </TeamProvider>
       </AuthProviderWrapper>

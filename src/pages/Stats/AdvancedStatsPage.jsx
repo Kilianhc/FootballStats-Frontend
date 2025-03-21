@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Typography, Card, CardContent } from "@mui/material";
-import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from "recharts";
+import { Box, Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import StatChart from "./components/StatChart";
 
 const AdvancedStatsPage = ({ players }) => {
     const [advancedStats, setAdvancedStats] = useState({
-        porteros: [],
-        defensas: [],
-        centrocampistas: [],
-        delanteros: [],
-    });
+        porteros: [], defensas: [], centrocampistas: [], delanteros: []});
 
     useEffect(() => {
         const groupedPlayers = {
@@ -40,171 +36,53 @@ const AdvancedStatsPage = ({ players }) => {
         <Container maxWidth="xl">
             <Box mt={5} mb={8}>
                 <Grid container spacing={3} justifyContent="center" alignItems="stretch">
-                    {/* Segundo gráfico */}
-                    
-
-                    {/* Nueva fila de gráficos */}
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Entradas Exitosas (Defensas)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.defensas, "triedTackles", "succesTackles", true)}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="percentage" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    {/* Primera fila */}
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="% de Entradas Exitosas (Defensas)"
+                            data={createChartData(advancedStats.defensas, "triedTackles", "succesTackles", true)}
+                            dataKey1="percentage" unit="%" color1="#007acc" />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Regates Exitosos (Delanteros)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros, "triedDribblings", "succesDribblings", true)}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="percentage" fill="#5c08bd" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="% de Regates Exitosos (Delanteros)"
+                            data={createChartData(advancedStats.delanteros, "triedDribblings", "succesDribblings", true)}
+                            dataKey1="percentage" unit="%" color1="#5c08bd" />
                     </Grid>
-
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Pases Exitosos (Centrocampistas)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.centrocampistas, "triedPass", "succesPass", true)}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="percentage" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="% de Pases Exitosos (Centrocampistas)"
+                            data={createChartData(advancedStats.centrocampistas, "triedPass", "succesPass", true)}
+                            dataKey1="percentage" unit="%" color1="#007acc" />
                     </Grid>
-                    {/* Nueva fila de gráficos */}
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>Disparos a Puerta vs Disparos Fuera (Delanteros)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros, "goalShoots", "outShoots")}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value1" fill="#007acc" />
-                                        <Bar dataKey="value2" fill="#5c08bd" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    {/* Segunda fila */}
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="Disparos a Puerta vs Disparos Fuera (Delanteros)"
+                            data={createChartData(advancedStats.delanteros, "goalShoots", "outShoots")}
+                            dataKey1="value1" dataKey2="value2" color1="#007acc" color2="#5c08bd" />
                     </Grid>
-
-                
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>% de Paradas (Porteros)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.porteros, "shootsOnGoalReceived", "goalsConceded", true)}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis unit="%" />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="percentage" fill="#5c08bd" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="% de Paradas (Porteros)"
+                            data={createChartData(advancedStats.porteros, "shootsOnGoalReceived", "goalsConceded", true)}
+                            dataKey1="percentage" unit="%" color1="#5c08bd" />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>Paradas vs Disparos Recibidos (Porteros)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value1" fill="#5c08bd" />
-                                        <Bar dataKey="value2" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="Paradas vs Disparos Recibidos (Porteros)"
+                            data={createChartData(advancedStats.porteros, "saves", "shootsOnGoalReceived")}
+                            dataKey1="value1" dataKey2="value2" color1="#5c08bd" color2="#007acc" />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>Pérdidas de Balón vs Robos de Balón (Centrocampistas)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.centrocampistas, "turnoversBall", "stealsBall")}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value1" fill="#5c08bd" />
-                                        <Bar dataKey="value2" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    {/* Tercera fila */}
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="Pérdidas de Balón vs Robos de Balón (Centrocampistas)"
+                            data={createChartData(advancedStats.centrocampistas, "turnoversBall", "stealsBall")}
+                            dataKey1="value1" dataKey2="value2" color1="#5c08bd" color2="#007acc" />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>Goles vs Minutos (Delanteros)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.delanteros,  "matchs","goals")}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value1" fill="#5c08bd" />
-                                        <Bar dataKey="value2" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="Goles vs Minutos (Delanteros)"
+                            data={createChartData(advancedStats.delanteros, "matchs", "goals")}
+                            dataKey1="value1" dataKey2="value2" color1="#5c08bd" color2="#007acc" />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                        <Card sx={{ boxShadow: 3, borderRadius: "20px", background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", height: "100%" }}>
-                            <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                                <Typography variant="h6" mb={2}>Asistencias vs Partidos (Centrocampistas)</Typography>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={createChartData(advancedStats.centrocampistas,  "matchs","asists")}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis fontSize="12px" dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value1" fill="#5c08bd" />
-                                        <Bar dataKey="value2" fill="#007acc" />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                    <Grid item xs={12} sm={4}>
+                        <StatChart title="Asistencias vs Partidos (Centrocampistas)"
+                            data={createChartData(advancedStats.centrocampistas, "matchs", "asists")}
+                            dataKey1="value1" dataKey2="value2" color1="#5c08bd" color2="#007acc" />
                     </Grid>
                 </Grid>
             </Box>

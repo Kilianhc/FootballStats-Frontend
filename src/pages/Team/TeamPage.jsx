@@ -12,12 +12,7 @@ const TeamPage = () => {
   const { user } = useUser();
   const { team, setTeam, players, setPlayers } = useTeam();
   const [openModal, setOpenModal] = useState(false);
-  const [newPlayer, setNewPlayer] = useState({
-    name: "",
-    age: "",
-    position: "",
-    team: "",
-  });
+  const [newPlayer, setNewPlayer] = useState({name: "", age: "", position: "", team: ""});
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -58,17 +53,13 @@ const TeamPage = () => {
     }
 
     const newPlayerData = {
-      ...newPlayer,
-      team: team._id,
-    };
+      ...newPlayer, team: team._id};
 
     try {
       const createdPlayer = await playerService.createPlayer(newPlayerData);
       console.log("Jugador creado con éxito:", createdPlayer);
-
       // Agrega el nuevo jugador directamente al estado
       setPlayers((prevPlayers) => [...prevPlayers, createdPlayer]);
-
       // Cierra el modal y limpia el formulario
       setOpenModal(false);
       setNewPlayer({ name: "", age: "", position: "", team: "" });

@@ -1,4 +1,4 @@
-import { Box, Button, Autocomplete, TextField } from "@mui/material";
+import { Box, Autocomplete, TextField } from "@mui/material";
 
 function TeamSearchAndRequest({ teams, selectedTeam, onSelectTeam, onSendRequest }) {
   return (
@@ -9,24 +9,8 @@ function TeamSearchAndRequest({ teams, selectedTeam, onSelectTeam, onSendRequest
         onChange={(event, value) => onSelectTeam(value)}  // Actualiza el equipo seleccionado
         value={selectedTeam}  // Esto asegura que el equipo seleccionado se muestra correctamente
         renderInput={(params) => <TextField {...params} label="Buscar equipo" variant="outlined"
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            backgroundColor: "#52eef0",
-            "& fieldset": {
-              borderColor: "#4caf50", // Cambiar color del borde cuando no está enfocado
-            },
-            "&:hover fieldset": {
-              borderColor: "#81c784", // Color del borde cuando el campo está enfocado
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#66bb6a", // Borde cuando el campo está enfocado
-            },
-          }
-        }} />}
-      />
-     {/*  <Button variant="contained" onClick={onSendRequest} sx={{ mt: 5, bgcolor:"#1498b5"  }}>
-        Asignar Equipo
-      </Button> */}
+        sx={{"& .MuiOutlinedInput-root": {backgroundColor: "#52eef0", "& fieldset": {borderColor: "#4caf50"},
+            "&:hover fieldset": {borderColor: "#81c784"}, "&.Mui-focused fieldset": {borderColor: "#66bb6a"}}}} />} />
     </Box>
   );
 }

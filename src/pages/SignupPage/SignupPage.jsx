@@ -8,14 +8,9 @@ function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState(""); // Estado para el rol
+  const [role, setRole] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
-
   const navigate = useNavigate();
-
-  /* const handleEmail = (e) => setEmail(e.target.value);
-  const handlePassword = (e) => setPassword(e.target.value);
-  const handleName = (e) => setName(e.target.value); */
 
 // Manejar el registro del usuario
 const handleSignupSubmit = (e) => {
@@ -31,59 +26,20 @@ const handleSignupSubmit = (e) => {
 };
 
 return (
-  <Box
-    sx={{
-      height: "100vh",
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }}
-  >
-    <Box
-      sx={{
-        background: "rgba(0, 0, 0, 0.7)",
-        padding: "2rem",
-        borderRadius: "10px",
-        width: "350px",
-        textAlign: "center",
-        color: "white",
-        mt: -10
-      }}
-    >
+  <Box sx={{height: "100vh", backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center",
+      display: "flex", alignItems: "center", justifyContent: "center"}}>
+    <Box sx={{background: "rgba(0, 0, 0, 0.7)", padding: "2rem", borderRadius: "10px", width: "350px",
+        textAlign: "center", color: "white", mt: -10}}>
       <Typography variant="h5" fontWeight="bold">
         Crear Cuenta
       </Typography>
       <form onSubmit={handleSignupSubmit}>
-        <TextField
-          fullWidth
-          label="Nombre"
-          variant="filled"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-        />
-        <TextField
-          fullWidth
-          label="Email"
-          variant="filled"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-        />
-        <TextField
-          fullWidth
-          label="Contraseña"
-          type="password"
-          variant="filled"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-        />
-
+        <TextField fullWidth label="Nombre" variant="filled" value={name} onChange={(e) => setName(e.target.value)}
+          sx={{ mt: 2, background: "white", borderRadius: "5px" }}/>
+        <TextField fullWidth label="Email" variant="filled" type="email" value={email}
+          onChange={(e) => setEmail(e.target.value)} sx={{ mt: 2, background: "white", borderRadius: "5px" }}/>
+        <TextField fullWidth label="Contraseña" type="password" variant="filled" value={password}
+          onChange={(e) => setPassword(e.target.value)} sx={{ mt: 2, background: "white", borderRadius: "5px" }}/>
         {/* Select para elegir rol */}
         <FormControl fullWidth sx={{ mt: 2, background: "white", borderRadius: "5px" }}>
           <InputLabel>Rol</InputLabel>
@@ -92,7 +48,6 @@ return (
             <MenuItem value="Coach">Coach</MenuItem>
           </Select>
         </FormControl>
-
         <Button variant="contained" fullWidth sx={{ mt: 3, bgcolor: "#2d8384", transition: "transform 0.2s, background-color 0.2s", "&:hover": {
       transform: "scale(1.05)", bgcolor: "#3bb9bb"} }} type="submit">
           Registrarse

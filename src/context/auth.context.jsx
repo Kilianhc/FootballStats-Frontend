@@ -13,8 +13,6 @@ function AuthProviderWrapper(props) {
     setUserFromUserContext(updatedUser); // También en UserContext
   };
   
-  
-
   const { setUser: setUserFromUserContext } = useContext(UserContext);
 
   const storeToken = (token) => {
@@ -62,17 +60,7 @@ function AuthProviderWrapper(props) {
 
   return (
     <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        isLoading,
-        user,
-        storeToken,
-        authenticateUser,
-        logOutUser,
-        setUser: setUserFromUserContext,
-        updateUser,
-      }}
-    >
+      value={{isLoggedIn, isLoading, user, storeToken, authenticateUser, logOutUser, setUser: setUserFromUserContext, updateUser}}>
       {props.children}
     </AuthContext.Provider>
   );

@@ -11,8 +11,8 @@ import { useUser } from "../../context/user.context";
 import CreateTeamButton from "../Dashboard/DashboardComponents/CreateTeamButton";
 import EditProfileDialog from "../Dashboard/DashboardComponents/EditProfileDialog";
 import TeamSearchAndRequest from "./DashboardComponents/TeamSearchAndRequest";
-import authService from "../../services/auth.service";
 import Chatbot from "../../components/Chatbot"
+import UserInfo from "../Dashboard/DashboardComponents/UserInfo"
 
 const ProfilePage = () => {
   const { user, setUser } = useUser();
@@ -24,7 +24,6 @@ const ProfilePage = () => {
   const { updateUser } = useContext(AuthContext);
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
-
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,10 +68,7 @@ const ProfilePage = () => {
 
   const handleUpdateProfile = async (updatedData) => {
     try {
-      const finalData = {
-        ...updatedData,
-        team: updatedData.team !== undefined ? updatedData.team : user.team
-      };
+      const finalData = {...updatedData, team: updatedData.team !== undefined ? updatedData.team : user.team};
 
       const response = await userService.updateProfile(user._id, finalData);
       setUser((prevUser) => ({ ...prevUser, ...finalData }));
@@ -81,8 +77,6 @@ const ProfilePage = () => {
       setOpenEditDialog(false);
     } catch (error) {
       console.error("Error updating profile:", error);
-
-
     }
   };
 
@@ -109,29 +103,17 @@ const ProfilePage = () => {
   
     try {
       // Llamar a la API para actualizar el equipo del usuario
-      const response = await userService.updateProfile(user._id, {
-        team: team._id,  // Usamos el ID del equipo seleccionado
-      });
+      const response = await userService.updateProfile(user._id, {team: team._id});
   
-      // Verificar si la respuesta fue exitosa antes de continuar
       if (response && response.data) {
         // Actualizar el estado global (context) del usuario con el nuevo equipo
-        setUser((prevUser) => ({
-          ...prevUser,
-          team: team._id,  // Actualiza el equipo en el contexto global
-        }));
+        setUser((prevUser) => ({...prevUser, team: team._id}));
   
-        // También actualizar el nombre del equipo
         setTeamName(team.name);
-  
-        // Mostrar el mensaje de cambio de equipo
+        // Mostrar el mensaje de cambio de equipo, cerrar sesión y redirigir a la página de login
         alert("Has cambiado de equipo. Por favor, reinicia sesión para poder acceder a la información del equipo.");
-  
-        // Cerrar la sesión
-        logOutUser();  // Este método debe ser el que tienes en tu contexto o servicio para hacer logout
-  
-        // Redirigir a la página de login
-        navigate("/login"); // Redirige a la página de login
+        logOutUser();
+        navigate("/login");
       } else {
         alert("Hubo un error al intentar actualizar el equipo.");
       }
@@ -141,10 +123,6 @@ const ProfilePage = () => {
     }
   };
   
-  
-  
-
-
   const handleSendRequest = async () => {
     if (!selectedTeam) {
       alert("Por favor, selecciona un equipo.");
@@ -153,23 +131,15 @@ const ProfilePage = () => {
   
     try {
       // Llamar a la API para actualizar el equipo del usuario
-      const response = await userService.updateProfile(user._id, {
-        team: selectedTeam._id,  // Aquí usamos el ID del equipo seleccionado
-      });
+      const response = await userService.updateProfile(user._id, {team: selectedTeam._id});
   
-      // Verificar si la respuesta fue exitosa antes de continuar
       if (response && response.data) {
         // Actualizar el estado global (context) del usuario con el nuevo equipo
-        setUser((prevUser) => ({
-          ...prevUser,
-          team: selectedTeam._id,  // Actualiza el equipo en el contexto global
-        }));
-  
-        // También actualizar el nombre del equipo
+        setUser((prevUser) => ({...prevUser, team: selectedTeam._id,}));
+        
         setTeamName(selectedTeam.name);
-  
-        // Obtener los datos actualizados del usuario desde la API (nuevo equipo asignado)
-        const updatedUser = await userService.getProfile();  // Re-fetch the user data
+      
+        const updatedUser = await userService.getProfile(); 
         setUser(updatedUser.data);  // Actualiza el estado con los datos más recientes
   
         alert("¡Te has unido al equipo exitosamente!");
@@ -180,66 +150,40 @@ const ProfilePage = () => {
     }
   };
   
-
   return (
     <>
-    <Container maxWidth="md">
-      <Box mt={7}>
-        <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)" }}>
-          <CardContent sx={{ fontWeight: "bold" }}>
-            {user ? (
-              <>
-                <Typography variant="h4" gutterBottom mb={5}>Nombre: {user.name}</Typography>
-                <Typography variant="h6" mb={2}>Email: {user.email}</Typography>
-                <Typography variant="h6" mb={2}>Rol: {user.role}</Typography>
-                <Typography variant="h6" mb={2}>Equipo: {user.team ? teamName : "Sin equipo"}</Typography>
-
-                {user.role === "Analyst" && !user.team && (
-                  <CreateTeamButton onCreateTeam={handleCreateTeam} />
-                )}
-
-                {user.role === "Coach" && !user.team && (
-                  <TeamSearchAndRequest
-                    teams={teams}
-                    selectedTeam={selectedTeam}
-                    onSelectTeam={handleSelectTeam}
-                    onSendRequest={handleSendRequest}
-                  />
-                )}
-
-                <Box mt={3} display="flex" sx={{ justifyContent: "center" }}>
-                  <EditProfileButton onOpenEdit={() => setOpenEditDialog(true)} />
-                  <DeleteAccountButton onOpenDelete={() => setOpenDialog(true)} />
-                </Box>
-              </>
-            ) : (
-              <Typography variant="body1">Cargando perfil...</Typography>
-            )}
-          </CardContent>
-        </Card>
-      </Box>
-
-      <ConfirmationDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onConfirm={handleDeleteAccount}
-        title="Confirmar Eliminación"
-        message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
-      />
-
-      <EditProfileDialog
-        open={openEditDialog}
-        onClose={() => setOpenEditDialog(false)}
-        onSave={handleUpdateProfile}
-        userData={user}
-      />
-    </Container>
-      {/* Integrar el Chatbot */}
-          <Container maxWidth="md">
-            <Chatbot />
-          </Container>
+      <Container maxWidth="md">
+        <Box mt={7}>
+          <Card sx={{ p: 5, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)" }}>
+            <CardContent sx={{ fontWeight: "bold" }}>
+              {user ? (
+                <>
+                  <UserInfo user={user} teamName={teamName} />
+                  {user.role === "Analyst" && !user.team && (
+                    <CreateTeamButton onCreateTeam={handleCreateTeam} />
+                  )}
+                  {user.role === "Coach" && !user.team && (
+                    <TeamSearchAndRequest teams={teams} selectedTeam={selectedTeam} onSelectTeam={handleSelectTeam} onSendRequest={handleSendRequest} />
+                  )}
+                  <Box mt={3} display="flex" sx={{ justifyContent: "center" }}>
+                    <EditProfileButton onOpenEdit={() => setOpenEditDialog(true)} />
+                    <DeleteAccountButton onOpenDelete={() => setOpenDialog(true)} />
+                  </Box>
+                </>
+              ) : (
+                <Typography variant="body1">Cargando perfil...</Typography>
+              )}
+            </CardContent>
+          </Card>
+        </Box>
+        <ConfirmationDialog open={openDialog} onClose={() => setOpenDialog(false)} onConfirm={handleDeleteAccount} title="Confirmar Eliminación"
+          message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer." />
+        <EditProfileDialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} onSave={handleUpdateProfile} userData={user} />
+        <Container maxWidth="md">
+          <Chatbot />
+        </Container>
+      </Container>
     </>
-  );
+  ); 
 };
-
 export default ProfilePage;

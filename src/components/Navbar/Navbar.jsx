@@ -54,23 +54,18 @@ function Navbar() {
   position: "absolute", top: "7%", transform: "translateY(-30%)"}}}} open={isDrawerOpen} onClose={toggleDrawer(false)}>
   <Box sx={{ width: 200, boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(10px)", height: "20vh", padding: 2 }}>
     <List>
-      {/* Perfil con icono */}
       <ListItem button component={Link} to="/profile" onClick={toggleDrawer(false)}>
         <ListItemIcon>
           <AccountBoxIcon sx={{ color: "#135d5e" }} />
         </ListItemIcon>
         <ListItemText primary={<Typography sx={{ color: "#135d5e", fontWeight: "bold", fontSize: "1.1rem" }}>Perfil</Typography>} />
       </ListItem>
-
-      {/* Equipo con icono */}
       <ListItem sx={{ cursor: "pointer" }} button onClick={handleViewTeam}>
         <ListItemIcon>
           <GroupsIcon sx={{ color: "#135d5e" }} />
         </ListItemIcon>
         <ListItemText primary={<Typography sx={{ color: "#135d5e", fontWeight: "bold", fontSize: "1.1rem" }}>Equipo</Typography>} />
       </ListItem>
-
-      {/* Estadísticas con icono */}
       <ListItem sx={{ cursor: "pointer" }} button onClick={handleViewStats}>
         <ListItemIcon>
           <LeaderboardIcon sx={{ color: "#135d5e" }} />
@@ -80,14 +75,12 @@ function Navbar() {
     </List>
   </Box>
 </Drawer>
-
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "220px", flexGrow: 1, textAlign: "center" }}>
           <img src={logo} alt="Logo" style={{ height: "60px", marginRight: "10px", border: "none", filter: "drop-shadow(0px 0px 10px rgba(255, 255, 255, 1))", opacity: 0.7 }} />
           <Typography variant="h6" component="div" sx={{ fontWeight: "900", fontSize: "xx-large" }}>
             FootballStats
           </Typography>
         </Box>
-
         <Box sx={{ display: "flex", gap: 2 }}>
           {isLoggedIn ? (
             <>

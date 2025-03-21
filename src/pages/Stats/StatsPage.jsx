@@ -3,15 +3,13 @@ import { useParams } from "react-router-dom";
 import playerService from "../../services/player.service";
 import statsService from "../../services/stats.service";
 import { useUser } from "../../context/user.context";
-import {
-  Typography, Box, CircularProgress, Container, Card, CardContent, Button, TextField,
-  Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, FormControl, InputLabel
-} from "@mui/material";
+import {Typography, Box, Container, Card, CardContent, Button, MenuItem, Select, FormControl, InputLabel} from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AdvancedStatsPage from "./AdvancedStatsPage"
 import Chatbot from "../../components/Chatbot"
+import EditStatsDialog from "./components/EditStatsDialog";
 
 const StatsPage = () => {
   const { user } = useUser();
@@ -21,12 +19,10 @@ const StatsPage = () => {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("Todos los jugadores");
-
   const [newStats, setNewStats] = useState({
-    matchs: 0, minutes: 0, goals: 0, asists: 0, saves: 0,
-    goalsConceded: 0, cleanSheet: 0, shootsOnGoalReceived: 0, goalsShoots: 0,
-    outShoots: 0, triedDribblings: 0, succesDribblings: 0, triedTackles: 0,
-    succesTackles: 0, triedPass: 0, succesPass: 0, turnoversBall: 0, stealsBall: 0,
+    matchs: 0, minutes: 0, goals: 0, asists: 0, saves: 0, goalsConceded: 0,
+    cleanSheet: 0, shootsOnGoalReceived: 0, goalsShoots: 0, outShoots: 0, triedDribblings: 0, succesDribblings: 0,
+    triedTackles: 0, succesTackles: 0, triedPass: 0, succesPass: 0, turnoversBall: 0, stealsBall: 0
   });
 
   useEffect(() => {
@@ -41,23 +37,18 @@ const StatsPage = () => {
         setLoading(false);
       }
     };
-  
+
     if (teamId) {
       fetchPlayersStats();
     }
   }, [teamId]);
-  
 
   const handleEditStats = (player) => {
     setSelectedPlayer(player);
     setNewStats({
-      matchs: 0, minutes: 0, goals: 0, asists: 0,
-      saves: 0, goalsConceded: 0, cleanSheet: 0,
-      shootsOnGoalReceived: 0, goalShoots: 0,
-      outShoots: 0, triedDribblings: 0,
-      succesDribblings: 0, triedTackles: 0,
-      succesTackles: 0, triedPass: 0,
-      succesPass: 0, turnoversBall: 0, stealsBall: 0,
+      matchs: 0, minutes: 0, goals: 0, asists: 0, saves: 0, goalsConceded: 0, cleanSheet: 0,
+      shootsOnGoalReceived: 0, goalShoots: 0, outShoots: 0, triedDribblings: 0, succesDribblings: 0, triedTackles: 0,
+      succesTackles: 0, triedPass: 0, succesPass: 0, turnoversBall: 0, stealsBall: 0
     });
     setOpen(true);
   };
@@ -78,58 +69,20 @@ const StatsPage = () => {
   });
 
   const statTranslations = {
-    matchs: "Partidos",
-    minutes: "Minutos",
-    goals: "Goles",
-    asists: "Asistencias",
-    saves: "Paradas",
-    goalsConceded: "Goles Concedidos",
-    cleanSheet: "Portería a Cero",
-    shootsOnGoalReceived: "Tiros Recibidos",
-    goalShoots: "Tiros a Portería",
-    outShoots: "Tiros Fuera",
-    triedDribblings: "Regates Intentados",
-    succesDribblings: "Regates Exitosos",
-    triedTackles: "Entradas Intentadas",
-    succesTackles: "Entradas Exitosas",
-    triedPass: "Pases Intentados",
-    succesPass: "Pases Exitosos",
-    turnoversBall: "Pérdidas de Balón",
-    stealsBall: "Robos de Balón",
+    matchs: "Partidos", minutes: "Minutos", goals: "Goles", asists: "Asistencias",
+    saves: "Paradas", goalsConceded: "Goles Concedidos", cleanSheet: "Portería a Cero", shootsOnGoalReceived: "Tiros Recibidos",
+    goalShoots: "Tiros a Portería", outShoots: "Tiros Fuera", triedDribblings: "Regates Intentados", succesDribblings: "Regates Exitosos",
+    triedTackles: "Entradas Intentadas", succesTackles: "Entradas Exitosas", triedPass: "Pases Intentados",
+    succesPass: "Pases Exitosos", turnoversBall: "Pérdidas de Balón", stealsBall: "Robos de Balón"
   };
-
-
   // Configuración del carrusel con react-slick
   const sliderSettings = {
-    dots: false, // Oculta los puntos de navegación
-    infinite: true, // Navegación circular
-    speed: 500, // Velocidad de transición
-    slidesToShow: 4, // Muestra 4 tarjetas a la vez
-    slidesToScroll: 1, // Número de tarjetas a desplazar
-    arrows: true, // Muestra flechas
-    responsive: [
-      {
-        breakpoint: 1024, // Ajustes para pantallas más pequeñas
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+    dots: false, infinite: true, speed: 500, slidesToShow: 4, slidesToScroll: 1,
+    arrows: true, responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+      { breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
+    ]
   };
 
   return (
@@ -154,7 +107,6 @@ const StatsPage = () => {
           </Card>
         </Box>
       </Container>
-
       <Container maxWidth="xl">
         {filter === "Avanzada" ? (
           <AdvancedStatsPage players={players} />
@@ -194,20 +146,11 @@ const StatsPage = () => {
                                 </Typography>
                               );
                             })}
-                          {filter === "Avanzada" && (
-                            // Aquí agregas las estadísticas avanzadas para la opción "Avanzada"
-                            <>
-                              <Typography variant="body1" mb={1}>Estadísticas Avanzadas:</Typography>
-                              <Typography variant="body2" mb={1}>Pases Completos: {player.stats.succesPass + player.stats.triedPass}</Typography>
-                              <Typography variant="body2" mb={1}>Regates Completos: {player.stats.succesDribblings}</Typography>
-                              {/* Agrega otras estadísticas avanzadas que quieras mostrar */}
-                            </>
-                          )}
                           {user?.role === "Analyst" && (
-                          <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
-                          Editar Estadísticas
-                        </Button>
-                        )} 
+                            <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
+                              Editar Estadísticas
+                            </Button>
+                          )}
                         </CardContent>
                       </Card>
                     </Box>
@@ -219,36 +162,28 @@ const StatsPage = () => {
                     <Card key={player._id} sx={{ width: "300px", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 2 }}>
                       <CardContent>
                         <Typography variant="h6" mb={1}>{player.name}</Typography>
-                        {Object.entries(player.stats)  // Usamos Object.entries para obtener claves y valores
-                          .filter(([key]) => !["_id", "createdBy", "__v"].includes(key))  // Filtrar los campos no deseados
-                          .filter(([key, value]) => typeof value === 'number')  // Filtrar los campos con valores numéricos
+                        {Object.entries(player.stats)  
+                          .filter(([key]) => !["_id", "createdBy", "__v"].includes(key))  
+                          .filter(([key, value]) => typeof value === 'number') 
                           .filter(([key]) =>
                             player.position === "Portero"
                               ? ["matchs", "minutes", "saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived", "triedPass", "succesPass"].includes(key)
                               : !["saves", "goalsConceded", "cleanSheet", "shootsOnGoalReceived"].includes(key)
                           )
                           .map(([stat, value]) => {
-                            const statNameInSpanish = statTranslations[stat] || stat; // Si no hay traducción, se usa el nombre original
-                            const statValue = value || 0; // Si el valor no existe, usar 0
+                            const statNameInSpanish = statTranslations[stat] || stat; 
+                            const statValue = value || 0; 
                             return (
                               <Typography key={stat} variant="body1" mb={1}>
                                 {statNameInSpanish}: {statValue}
                               </Typography>
                             );
                           })}
-                        {filter === "Avanzada" && (
-                          <>
-                            <Typography variant="body1" mb={1}>Estadísticas Avanzadas:</Typography>
-                            <Typography variant="body2" mb={1}>Pases Completos: {player.stats.succesPass + player.stats.triedPass}</Typography>
-                            <Typography variant="body2" mb={1}>Regates Completos: {player.stats.succesDribblings}</Typography>
-                            {/* Agrega más estadísticas avanzadas aquí */}
-                          </>
-                        )}
                         {user?.role === "Analyst" && (
                           <Button color="primary" variant="contained" sx={{ bgcolor: "#135d5e" }} onClick={() => handleEditStats(player)}>
-                          Editar Estadísticas
-                        </Button>
-                        )}   
+                            Editar Estadísticas
+                          </Button>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
@@ -258,34 +193,12 @@ const StatsPage = () => {
           )
         )}
       </Container>
-
-
-
       {/* Diálogo de edición */}
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Editar Estadísticas de {selectedPlayer?.name}</DialogTitle>
-        <DialogContent>
-          {Object.keys(newStats).map((stat) => (
-            <TextField
-              key={stat}
-              label={stat.replace(/([A-Z])/g, " $1")}
-              type="number"
-              value={newStats[stat]}
-              onChange={(e) => setNewStats({ ...newStats, [stat]: e.target.value })}
-              fullWidth
-              margin="normal"
-            />
-          ))}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">Cancelar</Button>
-          <Button onClick={handleSaveStats} color="primary">Guardar</Button>
-        </DialogActions>
-      </Dialog>
+      <EditStatsDialog open={open} onClose={() => setOpen(false)} player={selectedPlayer} newStats={newStats} setNewStats={setNewStats} onSave={handleSaveStats} />
       {/* Integrar el Chatbot */}
-            <Container maxWidth="md">
-              <Chatbot />
-            </Container>
+      <Container maxWidth="md">
+        <Chatbot />
+      </Container>
     </>
   );
 }

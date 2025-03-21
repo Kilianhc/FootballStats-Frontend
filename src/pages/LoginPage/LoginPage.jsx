@@ -11,16 +11,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const navigate = useNavigate();
-
   const { storeToken, authenticateUser, isLoggedIn, isLoading } = useContext(AuthContext);
   const { setUser } = useContext(UserContext);
-
-  // Redirigir si el usuario ya está logueado
- /*  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/profile"); // Redirigir a ProfilePage si está logueado
-    }
-  }, [isLoggedIn, navigate]); */
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +31,6 @@ function LoginPage() {
             // Obtener los datos del usuario después de iniciar sesión
             const userData = response.data.user;
             setUser(userData); // Actualiza los datos del usuario en el contexto
-
             // Redirigir inmediatamente después de un login exitoso
             navigate("/profile");
           })
@@ -54,69 +45,25 @@ function LoginPage() {
   };
 
   if (isLoading) {
-    return <div>Cargando...</div>; // Puedes poner una pantalla de carga aquí
+    return <div>Cargando...</div>;
   }
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box
-        sx={{
-          background: "rgba(0, 0, 0, 0.7)",
-          padding: "2rem",
-          borderRadius: "10px",
-          width: "350px",
-          textAlign: "center",
-          color: "white",
-          mt: -10,
-        }}
-      >
+    <Box sx={{height: "100vh", backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center",
+        display: "flex", alignItems: "center", justifyContent: "center"}}>
+      <Box sx={{background: "rgba(0, 0, 0, 0.7)", padding: "2rem", borderRadius: "10px", width: "350px",
+          textAlign: "center", color: "white", mt: -10}}>
         <Typography variant="h5" fontWeight="bold">
           Iniciar Sesión
         </Typography>
         <form onSubmit={handleLoginSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            variant="filled"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-          />
-          <TextField
-            fullWidth
-            label="Contraseña"
-            type="password"
-            variant="filled"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ mt: 2, background: "white", borderRadius: "5px" }}
-          />
-          <Button
-            variant="contained"
-            color="#2d8384"
-            fullWidth
-            sx={{
-              mt: 3,
-              bgcolor: "#2d8384",
-              transition: "transform 0.2s, background-color 0.2s",
-              "&:hover": {
-                transform: "scale(1.05)",
-                bgcolor: "#3bb9bb",
-              },
-            }}
-            type="submit"
-          >
+          <TextField fullWidth label="Email" variant="filled" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+            sx={{ mt: 2, background: "white", borderRadius: "5px" }}/>
+          <TextField fullWidth label="Contraseña" type="password" variant="filled" value={password}
+            onChange={(e) => setPassword(e.target.value)} sx={{ mt: 2, background: "white", borderRadius: "5px" }}/>
+          <Button variant="contained" color="#2d8384" fullWidth sx={{mt: 3, bgcolor: "#2d8384",
+              transition: "transform 0.2s, background-color 0.2s", "&:hover": {transform: "scale(1.05)", bgcolor: "#3bb9bb"}}}
+            type="submit">
             Entrar
           </Button>
         </form>

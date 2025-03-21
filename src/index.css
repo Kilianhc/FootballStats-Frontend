@@ -1,17 +1,17 @@
 body {
   margin: 0;
-  background-image: url(./assets/bg.jpeg), url(./assets/bj2.jpeg); /* Dos imágenes de fondo */
-  background-size: 120% 215%; /* Ajusta el tamaño de las imágenes para cubrir toda la pantalla */
-  background-repeat: no-repeat; /* No repetir las imágenes */
-  background-position: 0 0, 100% 0; /* Posición inicial de ambas imágenes */
-  animation: moveBackground 90s linear infinite; /* Animación más lenta */
+  background-image: url(./assets/bg.jpeg), url(./assets/bj2.jpeg); 
+  background-size: 120% 215%; 
+  background-repeat: no-repeat; 
+  background-position: 0 0, 100% 0; 
+  animation: moveBackground 90s linear infinite; 
 }
 
 @keyframes moveBackground {
   0% {
-    background-position: 100% 0, 0 0; /* Inicia con ambas imágenes alineadas */
+    background-position: 100% 0, 0 0; 
   }
   100% {
-    background-position: 0 0, -100% 0; /* Mueve ambas imágenes al mismo tiempo */
+    background-position: 0 0, -100% 0; 
   }
 }
