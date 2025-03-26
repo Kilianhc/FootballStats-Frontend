@@ -23,11 +23,11 @@ const Chatbot = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (containsOffensiveLanguage(prompt)) {
       alert("Por favor, evita contenido ofensivo.");
       return;
-  }
+    }
     setIsLoading(true);
 
     try {
@@ -43,8 +43,8 @@ const Chatbot = () => {
       const geminiResponse = res.data.candidates[0].content.parts[0].text;
       setResponse(geminiResponse);
     } catch (error) {
-      console.error("Error al llamar a la API:", error);
-      setResponse("Hubo un error al procesar tu solicitud.");
+      console.error("Error:", error.response?.data || error.message);
+      setResponse(error.response?.data?.error || "Hubo un error al procesar tu solicitud.");
     } finally {
       setIsLoading(false);
     }
