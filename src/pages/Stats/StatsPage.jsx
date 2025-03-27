@@ -120,7 +120,7 @@ const StatsPage = () => {
               </Card>
             </Box>
           ) : (
-            <Box mt={5} mb={8} textAlign="center">
+            <Box mt={5} mb={10} textAlign="center">
               {/* Mostrar carrusel solo si hay más de 4 jugadores */}
               {filteredPlayers.length > 4 ? (
                 <Slider {...sliderSettings}>
