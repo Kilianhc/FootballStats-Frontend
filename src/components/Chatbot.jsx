@@ -44,7 +44,11 @@ const Chatbot = () => {
       setResponse(geminiResponse);
     } catch (error) {
       console.error("Error:", error.response?.data || error.message);
-      setResponse(error.response?.data?.error || "Hubo un error al procesar tu solicitud.");
+      if (error.response?.status === 429) {
+        setResponse("Has superado el límite de peticiones. Inténtalo nuevamente en 30 minutos.");
+    } else {
+        setResponse(error.response?.data?.error || "Hubo un error al procesar tu solicitud.");
+    }
     } finally {
       setIsLoading(false);
     }
