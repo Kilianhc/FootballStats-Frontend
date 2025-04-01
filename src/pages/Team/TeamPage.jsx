@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import teamService from "../../services/team.service";
 import { useUser } from "../../context/user.context";
 import playerService from "../../services/player.service";
-import { Card, CardContent, Typography, Container, Box, Button, TextField, Modal, MenuItem, Grid2 } from "@mui/material";
+import { Card, CardContent, Typography, Container, Box, Button } from "@mui/material";
 import { useTeam } from "../../context/team.context";
 import Chatbot from "../../components/Chatbot"
 import AddPlayerModal from "./components/AddPlayerModal";
