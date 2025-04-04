@@ -80,8 +80,8 @@ const StatsPage = () => {
     dots: false, infinite: true, speed: 500, slidesToShow: 4, slidesToScroll: 1,
     arrows: true, responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 1 } },
-      { breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 1 } },
-      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } }
+      { breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 1, arrows: false } },
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1, arrows: false } }
     ]
   };
 
@@ -120,13 +120,13 @@ const StatsPage = () => {
               </Card>
             </Box>
           ) : (
-            <Box mt={5} mb={10} textAlign="center">
+            <Box mt={5} mb={20}>
               {/* Mostrar carrusel solo si hay más de 4 jugadores */}
               {filteredPlayers.length > 4 ? (
                 <Slider {...sliderSettings}>
                   {filteredPlayers.map((player) => (
                     <Box key={player._id} sx={{ padding: 1 }}>
-                      <Card sx={{ width: "300px", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 2 }}>
+                      <Card sx={{ width: "300px", boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 3.8 }}>
                         <CardContent>
                           <Typography variant="h6" mb={1}>{player.name}</Typography>
                           {Object.entries(player.stats)  // Usamos Object.entries para obtener claves y valores

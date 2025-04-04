@@ -3,9 +3,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } 
 
 const EditStatsDialog = ({ open, onClose, player, newStats = {}, setNewStats, onSave }) => {
     return (
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose} scroll="paper" fullWidth maxWidth="sm">
         <DialogTitle>Editar Estadísticas de {player?.name}</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers sx={{ maxHeight: "50vh", overflow: "auto"}}>
           {Object.keys(newStats || {}).map((stat) => (
             <TextField
               key={stat}

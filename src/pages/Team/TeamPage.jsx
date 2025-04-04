@@ -14,7 +14,7 @@ const TeamPage = () => {
   const { user } = useUser();
   const { team, setTeam, players, setPlayers } = useTeam();
   const [openModal, setOpenModal] = useState(false);
-  const [newPlayer, setNewPlayer] = useState({name: "", age: "", position: "", team: ""});
+  const [newPlayer, setNewPlayer] = useState({ name: "", age: "", position: "", team: "" });
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -55,7 +55,8 @@ const TeamPage = () => {
     }
 
     const newPlayerData = {
-      ...newPlayer, team: team._id};
+      ...newPlayer, team: team._id
+    };
 
     try {
       const createdPlayer = await playerService.createPlayer(newPlayerData);
@@ -101,8 +102,15 @@ const TeamPage = () => {
         </Box>
       </Container>
       <Container maxWidth="xl">
-        <Box display="flex" justifyContent="center" width="100%" sx={{ mb: 12, mt: 4 }}>
-          {players.length > 0 ? <PlayerList players={players} user={user} onDelete={handleDeletePlayer} /> : <Typography variant="h5">No hay jugadores en este equipo</Typography>}
+        <Box display="flex" justifyContent="center" alignItems="center" width="100%" sx={{ mb: 20, mt: 4 }}>
+          {Array.isArray(players) && players.length > 0 ?
+            <PlayerList players={players} user={user} onDelete={handleDeletePlayer} /> :
+            <Card sx={{ boxShadow: 10, borderRadius: 5, background: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", padding: 3 }}>
+              <CardContent>
+                <Typography variant="h5" textAlign="center">No hay jugadores en este equipo.</Typography>
+              </CardContent>
+            </Card>
+          }
         </Box>
       </Container>
       <Container maxWidth="md">

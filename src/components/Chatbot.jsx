@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/auth.context";
 import { useTeam } from "../context/team.context";
-import { Box, TextField, Button, Typography, Card, CircularProgress, IconButton, Collapse } from "@mui/material";
+import { Box, TextField, Button, Typography, Card, CircularProgress, IconButton, Collapse, useTheme, useMediaQuery } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -15,6 +15,8 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false); // Estado para controlar la visibilidad del Chatbot
   const { user } = useContext(AuthContext);
   const { team } = useTeam();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery("(max-width:1000px)"); // Detectar pantallas pequeñas
 
   const containsOffensiveLanguage = (text) => {
     const bannedWords = ["cabron", "gilipollas", "maricon", "retrasado", "hijo de puta", "coño", "joder"];
@@ -46,16 +48,18 @@ const Chatbot = () => {
       console.error("Error:", error.response?.data || error.message);
       if (error.response?.status === 429) {
         setResponse("Has superado el límite de peticiones. Inténtalo nuevamente en 30 minutos.");
-    } else {
+      } else {
         setResponse(error.response?.data?.error || "Hubo un error al procesar tu solicitud.");
-    }
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Box sx={{ position: "fixed", bottom: 0, right: 20, zIndex: 1000, width: "30%" }}>
+    <Box sx={{
+      position: "fixed", bottom: isSmallScreen ? 70 : 0, right: 20, zIndex: 1000, width: isSmallScreen ? "90%" : "30%",
+      maxWidth: isSmallScreen ? "90%" : "400px", boxSizing: "border-box"}}>
       {/* Pestaña del Chatbot */}
       <Card sx={{
         backgroundColor: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", borderRadius: "10px 10px 0 0",
