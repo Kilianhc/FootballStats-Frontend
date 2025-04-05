@@ -58,8 +58,8 @@ const Chatbot = () => {
 
   return (
     <Box sx={{
-      position: "fixed", bottom: isSmallScreen ? 0 : 0, right: "15%", zIndex: 1000, width: isSmallScreen ? "70%" : "30%",
-      maxWidth: isSmallScreen ? "70%" : "400px", boxSizing: "border-box"}}>
+      position: "fixed", bottom: isSmallScreen ? 0 : 0, right: "5%", zIndex: 1000, width: isSmallScreen ? "90%" : "50%",
+      maxWidth: isSmallScreen ? "90%" : "600px", boxSizing: "border-box"}}>
       {/* Pestaña del Chatbot */}
       <Card sx={{
         backgroundColor: "rgba(0, 255, 255, 0.7)", backdropFilter: "blur(8px)", borderRadius: "10px 10px 0 0",
