@@ -5,7 +5,7 @@ FootballStats es una aplicación Full-stack desarrollada con el stack MERN (Mong
 ## Características principales
 
 - **Aplicación Full-stack** utilizando el stack MERN (MongoDB, Express, React y Node.js).
-- **Frontend SPA** desarrollado con React, con múltiples vistas e implementación completa de acciones CRUD.
+- **Frontend SPA** desarrollado con React, con múltiples vistas e implementación completa de acciones CRUD, y estilos con Material UI.
 - **Backend API REST** construido con ExpressJS, MongoDB y Mongoose.
 - **Base de datos con 4 modelos:**
   - `User`
@@ -105,7 +105,7 @@ Para evitar el abuso del chatbot, se ha implementado un sistema de rate limiting
 3. Acceder a la aplicación en el navegador en `http://localhost:3000`.
 
 ## Tecnologías utilizadas
-- **Frontend:** React, React Router, Axios
+- **Frontend:** React, React Router, Axios, Material UI
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JSON Web Token (JWT)
 - **Inteligencia Artificial:** Google Perspective API, Google Gemini AI
 - **Otros:** bcrypt.js para cifrado de contraseñas, Express Rate Limit para control de peticiones
